@@ -1,0 +1,490 @@
+[Tokyo]
+city : Tokyo
+city_jp : 東京
+city_id : 0
+timedif : 0
+summer_time : 0
+font_color : 255
+
+[Vladivostok]
+city : Vladivostok
+city_jp : ウラジオストク
+city_id : 1
+timedif : 1
+summer_time : 0
+font_color : 255
+
+[Seoul]
+city : Seoul
+city_jp : ソウル
+city_id : 2
+timedif : 0
+summer_time : 0
+font_color : 255
+
+[Shanghai]
+city : Shanghai
+city_jp : 上海
+city_id : 3
+timedif : -1
+summer_time : 0
+font_color : 255
+
+[Taipei]
+city : Taipei
+city_jp : 台北
+city_id : 4
+timedif : -1
+summer_time : 0
+font_color : 255
+
+[Beijing]
+city : Beijing
+city_jp : 北京
+city_id : 5
+timedif : -1
+summer_time : 0
+font_color : 255
+
+[Perth]
+city : Perth
+city_jp : パース
+city_id : 6
+timedif : -1
+summer_time : 0
+font_color : 255
+
+[Hong Kong]
+city : Hong Kong
+city_jp : 香港
+city_id : 7
+timedif : -1
+summer_time : 0
+font_color : 255
+
+[Jakarta]
+city : Jakarta
+city_jp : ジャカルタ
+city_id : 8
+timedif : -2
+summer_time : 0
+font_color : 255
+
+[Irkutsk]
+city : Irkutsk
+city_jp : イルクーツク
+city_id : 9
+timedif : -1
+summer_time : 0
+font_color : 255
+
+[Singapore]
+city : Singapore
+city_jp : シンガポール
+city_id : 10
+timedif : -1
+summer_time : 0
+font_color : 255
+
+[Bangkok]
+city : Bangkok
+city_jp : バンコク
+city_id : 11
+timedif : -2
+summer_time : 0
+font_color : 255
+
+[Delhi]
+city : Delhi
+city_jp : デリー
+city_id : 12
+timedif : -3.5
+summer_time : 0
+font_color : 255
+
+[Karachi]
+city : Karachi
+city_jp : カラチ
+city_id : 13
+timedif : -4
+summer_time : 0
+font_color : 255
+
+[Dubai]
+city : Dubai
+city_jp : ドバイ
+city_id : 14
+timedif : -5
+summer_time : 0
+font_color : 255
+
+[Moscow]
+city : Moscow
+city_jp : モスクワ
+city_id : 15
+timedif : -6
+summer_time : 0
+font_color : 255
+
+[Jerusalem]
+city : Jerusalem
+city_jp : エルサレム
+city_id : 16
+timedif : -7
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 5
+summer_start_time : 2
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 1
+hemisphere : N
+font_color : 255
+
+[Cairo]
+city : Cairo
+city_jp : カイロ
+city_id : 17
+timedif : -7
+summer_time : 0
+font_color : 255
+
+[Saint Petersburg]
+city : Saint Petersburg
+city_jp : サンクトペテルブルク
+city_id : 18
+timedif : -6
+summer_time : 0
+font_color : 255
+
+[Istanbul]
+city : Istanbul
+city_jp : イスタンブール
+city_id : 19
+timedif : -7
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 3
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 3
+hemisphere : N
+font_color : 255
+
+[Johannesburg]
+city : Johannesburg
+city_jp : ヨハネスブルグ
+city_id : 20
+timedif : -7
+summer_time : 0
+font_color : 255
+
+[Helsinki]
+city : Helsinki
+city_jp : ヘルシンキ
+city_id : 21
+timedif : -7
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 3
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 3
+hemisphere : N
+font_color : 255
+
+[Berlin]
+city : Berlin
+city_jp : ベルリン
+city_id : 22
+timedif : -8
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 2
+hemisphere : N
+font_color : 255
+
+[Rome]
+city : Rome
+city_jp : ローマ
+city_id : 23
+timedif : -8
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 2
+hemisphere : N
+font_color : 255
+
+[Amsterdam]
+city : Amsterdam
+city_jp : アムステルダム
+city_id : 24
+timedif : -8
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 2
+hemisphere : N
+font_color : 255
+
+[Brussels]
+city : Brussels
+city_jp : ブリュッセル
+city_id : 25
+timedif : -8
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 2
+hemisphere : N
+font_color : 255
+
+[Paris]
+city : Paris
+city_jp : パリ
+city_id : 26
+timedif : -8
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 2
+hemisphere : N
+font_color : 255
+
+[London]
+city : London
+city_jp : ロンドン
+city_id : 27
+timedif : -9
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 1
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 1
+hemisphere : N
+font_color : 255
+
+[Accra]
+city : Accra
+city_jp : アクラ
+city_id : 28
+timedif : -9
+summer_time : 0
+font_color : 255
+
+[Madrid]
+city : Madrid
+city_jp : マドリード
+city_id : 29
+timedif : -8
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 2
+hemisphere : N
+font_color : 255
+
+[Rio de Janeiro]
+city : Rio de Janeiro
+city_jp : リオデジャネイロ
+city_id : 30
+timedif : -12
+summer_time : 1
+summer_start_month : 10
+summer_start_week_number : 3
+summer_start_week : 0
+summer_start_time : 0
+summer_finish_month : 2
+summer_finish_week_number : 2
+summer_finish_week : 6
+summer_finish_time : 23
+hemisphere : S
+font_color : 255
+
+[New York]
+city : New York
+city_jp : ニューヨーク
+city_id : 31
+timedif : -14
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : 2
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 11
+summer_finish_week_number : 1
+summer_finish_week : 0
+summer_finish_time : 1
+hemisphere : N
+font_color : 220
+
+[Toronto]
+city : Toronto
+city_jp : トロント
+city_id : 32
+timedif : -14
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : 2
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 11
+summer_finish_week_number : 1
+summer_finish_week : 0
+summer_finish_time : 1
+hemisphere : N
+font_color : 255
+
+[Mexico City]
+city : Mexico City
+city_jp : メキシコシティ
+city_id : 33
+timedif : -15
+summer_time : 1
+summer_start_month : 4
+summer_start_week_number : 1
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 10
+summer_finish_week_number : last
+summer_finish_week : 0
+summer_finish_time : 1
+hemisphere : N
+font_color : 255
+
+[Los Angeles]
+city : Los Angeles
+city_jp : ロサンゼルス
+city_id : 34
+timedif : -17
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : 2
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 11
+summer_finish_week_number : 1
+summer_finish_week : 0
+summer_finish_time : 1
+hemisphere : N
+font_color : 255
+
+[Vancouver]
+city : Vancouver
+city_jp : バンクーバー
+city_id : 35
+timedif : -17
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : 2
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 11
+summer_finish_week_number : 1
+summer_finish_week : 0
+summer_finish_time : 1
+hemisphere : N
+font_color : 255
+
+[Anchorage]
+city : Anchorage
+city_jp : アンカレッジ
+city_id : 36
+timedif : -18
+summer_time : 1
+summer_start_month : 3
+summer_start_week_number : 2
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 11
+summer_finish_week_number : 1
+summer_finish_week : 0
+summer_finish_time : 1
+hemisphere : N
+font_color : 255
+
+[Honolulu]
+city : Honolulu
+city_jp : ホノルル
+city_id : 37
+timedif : -19
+summer_time : 0
+font_color : 255
+
+[Auckland]
+city : Auckland
+city_jp : オークランド
+city_id : 38
+timedif : 3
+summer_time : 1
+summer_start_month : 9
+summer_start_week_number : last
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 4
+summer_finish_week_number : 1
+summer_finish_week : 0
+summer_finish_time : 2
+hemisphere : S
+font_color : 255
+
+[Sydney]
+city : Sydney
+city_jp : シドニー
+city_id : 39
+timedif : 1
+summer_time : 1
+summer_start_month : 10
+summer_start_week_number : 1
+summer_start_week : 0
+summer_start_time : 2
+summer_finish_month : 4
+summer_finish_week_number : 1
+summer_finish_week : 0
+summer_finish_time : 2
+hemisphere : S
+font_color : 255

@@ -27,8 +27,19 @@
 	celload"i/mistake.png",11
 	celload"i/worldmap.png",12
 	celload"i/i.png",13
+	celload"i/earth_clock.png",14
+	celload"i/earth.png",15
 	
-	gsel 0
+	gsel 0, 2
+	
+//設定の読み込み
+	notesel config
+	noteload "data/config.dat"
+	
+	noteget offline_mode_buf, 0
+	
+	split offline_mode_buf, " : ", not_use, offline_mode
+	offline_mode = int(offline_mode)
 	
 //フォントの埋め込み
 	#include "gdi32.as"
@@ -52,7 +63,7 @@
 	#define ID_TIMER        1
 
 	bgscr 0,1024,640
-	gsel 0,2
+	gsel 0, 2
 	onexit *exit
 	
 //ウィンドウタイマー
@@ -92,6 +103,13 @@
 	return
 	
 #global
+	
+	color 230, 230, 230 : boxf
+	font "Noto Sans CJK SC Light",16 : color 0, 0, 0
+	cmes "時刻を取得中です...", 0, 260, 1024, 280
+	redraw 1
+	
+	sdim cityname, 40
 	
 	cityname.0="Tokyo, Japan"
 	cityname.1="Vladivostok, Russia"
@@ -134,10 +152,16 @@
 	cityname.38="Auckland, New Zealand"
 	cityname.39="Sydney, Australia"
 	
-	goto*tokyo
+	selected_city = "Tokyo"
+	goto *clicked_city
 	
 *exit
 	oncmd 0
+	
+	notesel config
+	noteadd "offline_mode : "+offline_mode+"", 0, 1
+	notesave "data/config.dat"
+	
 	end
 	
 *click
@@ -147,136 +171,141 @@
 	
 	if ( from_game1=0 and 790<= mousex & 990 >= mousex and 30<= mousey & 610 >= mousey ) or from_game1=1{
 		if ( from_game1=0 and 40+24*(0+top)<= mousey & 40+24*(1+top) >= mousey ) or ( from_game1=1 and random_city_id_2=0) {
-			goto*tokyo
+			selected_city = "Tokyo"
 		}
 		if ( from_game1=0 and 40+24*(1+top)<= mousey & 40+24*(2+top) >= mousey ) or ( from_game1=1 and random_city_id_2=1) {
-			goto*vladivostok
+			selected_city = "Vladivostok"
 		}
 		if ( from_game1=0 and 40+24*(2+top)<= mousey & 40+24*(3+top) >= mousey ) or ( from_game1=1 and random_city_id_2=2 ) {
-			goto*seoul
+			selected_city = "Seoul"
 		}
 		if ( from_game1=0 and 40+24*(3+top)<= mousey & 40+24*(4+top) >= mousey ) or ( from_game1=1 and random_city_id_2=3 ) {
-			goto*shanghai
+			selected_city = "Shanghai"
 		}
 		if ( from_game1=0 and 40+24*(4+top)<= mousey & 40+24*(5+top) >= mousey ) or ( from_game1=1 and random_city_id_2=4 ) {
-			goto*taipei
+			selected_city = "Taipei"
 		}
 		if ( from_game1=0 and 40+24*(5+top)<= mousey & 40+24*(6+top) >= mousey ) or ( from_game1=1 and random_city_id_2=5 ) {
-			goto*beijing
+			selected_city = "Beijing"
 		}
 		if ( from_game1=0 and 40+24*(6+top)<= mousey & 40+24*(7+top) >= mousey ) or ( from_game1=1 and random_city_id_2=6 ) {
-			goto*perth
+			selected_city = "Perth"
 		}
 		if ( from_game1=0 and 40+24*(7+top)<= mousey & 40+24*(8+top) >= mousey ) or ( from_game1=1 and random_city_id_2=7 ) {
-			goto*hong_kong
+			selected_city = "Hong Kong"
 		}
 		if ( from_game1=0 and 40+24*(8+top)<= mousey & 40+24*(9+top) >= mousey ) or ( from_game1=1 and random_city_id_2=8 ) {
-			goto*jakarta
+			selected_city = "Jakarta"
 		}
 		if ( from_game1=0 and 40+24*(9+top)<= mousey & 40+24*(10+top) >= mousey ) or ( from_game1=1 and random_city_id_2=9 ) {
-			goto*irkutsk
+			selected_city = "Irkutsk"
 		}
 		if ( from_game1=0 and 40+24*(10+top)<= mousey & 40+24*(11+top) >= mousey ) or ( from_game1=1 and random_city_id_2=10 ) {
-			goto*singapore
+			selected_city = "Singapore"
 		}
 		if ( from_game1=0 and 40+24*(11+top)<= mousey & 40+24*(12+top) >= mousey ) or ( from_game1=1 and random_city_id_2=11 ) {
-			goto*bangkok
+			selected_city = "Bangkok"
 		}
 		if ( from_game1=0 and 40+24*(12+top)<= mousey & 40+24*(13+top) >= mousey ) or ( from_game1=1 and random_city_id_2=12 ) {
-			goto*delhi
+			selected_city = "Delhi"
 		}
 		if ( from_game1=0 and 40+24*(13+top)<= mousey & 40+24*(14+top) >= mousey ) or ( from_game1=1 and random_city_id_2=13 ) {
-			goto*karachi
+			selected_city = "Karachi"
 		}
 		if ( from_game1=0 and 40+24*(14+top)<= mousey & 40+24*(15+top) >= mousey ) or ( from_game1=1 and random_city_id_2=14 ) {
-			goto*dubai
+			selected_city = "Dubai"
 		}
 		if ( from_game1=0 and 40+24*(15+top)<= mousey & 40+24*(16+top) >= mousey ) or ( from_game1=1 and random_city_id_2=15 ) {
-			goto*moscow
+			selected_city = "Moscow"
 		}
 		if ( from_game1=0 and 40+24*(16+top)<= mousey & 40+24*(17+top) >= mousey ) or ( from_game1=1 and random_city_id_2=16 ) {
-			goto*jerusalem
+			selected_city = "Jerusalem"
 		}
 		if ( from_game1=0 and 40+24*(17+top)<= mousey & 40+24*(18+top) >= mousey ) or ( from_game1=1 and random_city_id_2=17 ) {
-			goto*cairo
+			selected_city = "Cairo"
 		}
 		if ( from_game1=0 and 40+24*(18+top)<= mousey & 40+24*(19+top) >= mousey ) or ( from_game1=1 and random_city_id_2=18 ) {
-			goto*saint_petersburg
+			selected_city = "Saint Petersburg"
 		}
 		if ( from_game1=0 and 40+24*(19+top)<= mousey & 40+24*(20+top) >= mousey ) or ( from_game1=1 and random_city_id_2=19 ) {
-			goto*istanbul
+			selected_city = "Istanbul"
 		}
 		if ( from_game1=0 and 40+24*(20+top)<= mousey & 40+24*(21+top) >= mousey ) or ( from_game1=1 and random_city_id_2=20 ) {
-			goto*johannesburg
+			selected_city = "Johannesburg"
 		}
 		if ( from_game1=0 and 40+24*(21+top)<= mousey & 40+24*(22+top) >= mousey ) or ( from_game1=1 and random_city_id_2=21 ) {
-			goto*helsinki
+			selected_city = "Helsinki"
 		}
 		if ( from_game1=0 and 40+24*(22+top)<= mousey & 40+24*(23+top) >= mousey ) or ( from_game1=1 and random_city_id_2=22 ) {
-			goto*berlin
+			selected_city = "Berlin"
 		}
 		if ( from_game1=0 and 40+24*(23+top)<= mousey & 40+24*(24+top) >= mousey ) or ( from_game1=1 and random_city_id_2=23 ) {
-			goto*rome
+			selected_city = "Rome"
 		}
 		if ( from_game1=0 and 40+24*(24+top)<= mousey & 40+24*(25+top) >= mousey ) or ( from_game1=1 and random_city_id_2=24 ) {
-			goto*amsterdam
+			selected_city = "Amsterdam"
 		}
 		if ( from_game1=0 and 40+24*(25+top)<= mousey & 40+24*(26+top) >= mousey ) or ( from_game1=1 and random_city_id_2=25 ) {
-			goto*brussels
+			selected_city = "Brussels"
 		}
 		if ( from_game1=0 and 40+24*(26+top)<= mousey & 40+24*(27+top) >= mousey ) or ( from_game1=1 and random_city_id_2=26 ) {
-			goto*paris
+			selected_city = "Paris"
 		}
 		if ( from_game1=0 and 40+24*(27+top)<= mousey & 40+24*(28+top) >= mousey ) or ( from_game1=1 and random_city_id_2=27 ) {
-			goto*london
+			selected_city = "London"
 		}
 		if ( from_game1=0 and 40+24*(28+top)<= mousey & 40+24*(29+top) >= mousey ) or ( from_game1=1 and random_city_id_2=28 ) {
-			goto*accra
+			selected_city = "Accra"
 		}
 		if ( from_game1=0 and 40+24*(29+top)<= mousey & 40+24*(30+top) >= mousey ) or ( from_game1=1 and random_city_id_2=29 ) {
-			goto*madrid
+			selected_city = "Madrid"
 		}
 		if ( from_game1=0 and 40+24*(30+top)<= mousey & 40+24*(31+top) >= mousey ) or ( from_game1=1 and random_city_id_2=30 ) {
-			goto*rio_de_janeiro
+			selected_city = "Rio de Janeiro"
 		}
 		if ( from_game1=0 and 40+24*(31+top)<= mousey & 40+24*(32+top) >= mousey ) or ( from_game1=1 and random_city_id_2=31 ) {
-			goto*new_york
+			selected_city = "New York"
 		}
 		if ( from_game1=0 and 40+24*(32+top)<= mousey & 40+24*(33+top) >= mousey ) or ( from_game1=1 and random_city_id_2=32 ) {
-			goto*toronto
+			selected_city = "Toronto"
 		}
 		if ( from_game1=0 and 40+24*(33+top)<= mousey & 40+24*(34+top) >= mousey ) or ( from_game1=1 and random_city_id_2=33 ) {
-			goto*mexico_city
+			selected_city = "Mexico City"
 		}
 		if ( from_game1=0 and 40+24*(34+top)<= mousey & 40+24*(35+top) >= mousey ) or ( from_game1=1 and random_city_id_2=34 ) {
-			goto*los_angeles
+			selected_city = "Los Angeles"
 		}
 		if ( from_game1=0 and 40+24*(35+top)<= mousey & 40+24*(36+top) >= mousey ) or ( from_game1=1 and random_city_id_2=35 ) {
-			goto*vancouver
+			selected_city = "Vancouver"
 		}
 		if ( from_game1=0 and 40+24*(36+top)<= mousey & 40+24*(37+top) >= mousey ) or ( from_game1=1 and random_city_id_2=36 ) {
-			goto*anchorage
+			selected_city = "Anchorage"
 		}
 		if ( from_game1=0 and 40+24*(37+top)<= mousey & 40+24*(38+top) >= mousey ) or ( from_game1=1 and random_city_id_2=37 ) {
-			goto*honolulu
+			selected_city = "Honolulu"
 		}
 		if ( from_game1=0 and 40+24*(38+top)<= mousey & 40+24*(39+top) >= mousey ) or ( from_game1=1 and random_city_id_2=38 ) {
-			goto*auckland
+			selected_city = "Auckland"
 		}
 		if ( from_game1=0 and 40+24*(39+top)<= mousey & 40+24*(40+top) >= mousey ) or ( from_game1=1 and random_city_id_2=39 ) {
-			goto*sydney
+			selected_city = "Sydney"
 		}
+	
+		goto*clicked_city
 	}
 	
-	if 940<= mousex & 970 >= mousex and 5<= mousey & 25 >= mousey{
+	if 910<= mousex & 940 >= mousex and 5<= mousey & 25 >= mousey{
 		if now="clock":goto*buffer_about_city
-		if now="game" or now="about" :goto*display
+		if now="game" or now="about" or now="earth_clock" :goto*display
+	}
+	if 940<= mousex & 970 >= mousex and 5<= mousey & 25 >= mousey{
+		goto*earth_clock
 	}
 	if 970<= mousex & 1000 >= mousex and 5<= mousey & 25 >= mousey{
 		goto*about
 	}
 	if 1000<= mousex & 1024 >= mousex and 5<= mousey & 25 >= mousey{
-		end
+		goto*exit
 	}
 	
 	oncmd 1
@@ -287,210 +316,106 @@
 	}
 	
 	return
-	
-*openmenu
-	
 
-*tokyo
-	city="Tokyo" : city_jp="東京" : city_id=0
-	timedif=0 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*vladivostok
-	city="Vladivostok" : city_jp="ウラジオストク" : city_id=1
-	timedif=1 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*seoul
-	city="Seoul" : city_jp="ソウル" : city_id=2
-	timedif=0 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*shanghai
-	city="Shanghai" : city_jp="上海" : city_id=3
-	timedif=-1 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*taipei
-	city="Taipei" : city_jp="台北" : city_id=4
-	timedif=-1 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*beijing
-	city="Beijing" : city_jp="北京" : city_id=5
-	timedif=-1 : smmertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*perth
-	city="Perth" : city_jp="パース" : city_id=6
-	timedif=-1 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*hong_kong
-	city="Hong Kong" : city_jp="香港" : city_id=7
-	timedif=-1 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*jakarta
-	city="Jakarta" : city_jp="ジャカルタ" : city_id=8
-	timedif=-2 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*irkutsk
-	city="Irkutsk" : city_jp="イルクーツク" : city_id=9
-	timedif=-1 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*singapore
-	city="Singapore" : city_jp="シンガポール" : city_id=10
-	timedif=-1 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*bangkok
-	city="Bangkok" : city_jp="バンコク" : city_id=11
-	timedif=-2 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*delhi
-	city="Delhi" : city_jp="デリー" : city_id=12
-	timedif=-3.5 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*karachi
-	city="Karachi" : city_jp="カラチ" : city_id=13
-	timedif=-4 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*dubai
-	city="Dubai" : city_jp="ドバイ" : city_id=14
-	timedif=-5 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*moscow
-	city="Moscow" : city_jp="モスクワ" : city_id=15
-	timedif=-6 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*jerusalem
-	city="Jerusalem" : city_jp="エルサレム" : city_id=16
-	timedif=-7 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*cairo
-	city="Cairo" : city_jp="カイロ" : city_id=17
-	timedif=-7 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*saint_petersburg
-	city="Saint Petersburg" : city_jp="サンクトペテルブルク" : city_id=18
-	timedif=-6 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*istanbul
-	city="Istanbul" : city_jp="イスタンブール" : city_id=19
-	timedif=-7 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*johannesburg
-	city="Johannesburg" : city_jp="ヨハネスブルグ" : city_id=20
-	timedif=-7 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*helsinki
-	city="Helsinki" : city_jp="ヘルシンキ" : city_id=21
-	timedif=-7 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*berlin
-	city="Berlin" : city_jp="ベルリン" : city_id=22
-	timedif=-8 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*rome
-	city="Rome" : city_jp="ローマ" : city_id=23
-	timedif=-8 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*amsterdam
-	city="Amsterdam" : city_jp="アムステルダム" : city_id=24
-	timedif=-8 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*brussels
-	city="Brussels" : city_jp="ブリュッセル" : city_id=25
-	timedif=-8 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*paris
-	city="Paris" : city_jp="パリ" : city_id=26
-	timedif=-8 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*london
-	city="London" : city_jp="ロンドン" : city_id=27
-	timedif=-9 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*accra
-	city="Accra" : city_jp="アクラ" : city_id=28
-	timedif=-9 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*madrid
-	city="Madrid" : city_jp="マドリード" : city_id=29
-	timedif=-9 : summertime_start=4 : summertime_end=10
-	fontcolor=255
-	goto*display
-*rio_de_janeiro
-	city="Rio de Janeiro" : city_jp="リオデジャネイロ" : city_id=30
-	timedif=-12 : summertime_start=11 : summertime_end=2
-	fontcolor=255
-	goto*display
-*new_york
-	city="New York" : city_jp="ニューヨーク" : city_id=31
-	timedif=-14 : summertime_start=3 : summertime_end=10
-	fontcolor=220
-	goto*display
-*toronto
-	city="Toronto" : city_jp="トロント" : city_id=32
-	timedif=-14 : summertime_start=3 : summertime_end=10
-	fontcolor=255
-	goto*display
-*mexico_city
-	city="Mexico City" : city_jp="メキシコシティ" : city_id=33
-	timedif=-15 : summertime_start=3 : summertime_end=10
-	fontcolor=255
-	goto*display
-*los_angeles
-	city="Los Angeles" : city_jp="ロサンゼルス" : city_id=34
-	timedif=-17 : summertime_start=3 : summertime_end=10
-	fontcolor=255
-	goto*display
-*vancouver
-	city="Vancouver" : city_jp="バンクーバー" : city_id=35
-	timedif=-17 : summertime_start=3 : summertime_end=10
-	fontcolor=255
-	goto*display
-*anchorage
-	city="Anchorage" : city_jp="アンカレッジ" : city_id=36
-	timedif=-18 : summertime_start=3 : summertime_end=10
-	fontcolor=255
-	goto*display
-*honolulu
-	city="Honolulu" : city_jp="ホノルル" : city_id=37
-	timedif=-19 : summertime_start=0 : summertime_end=0
-	fontcolor=255
-	goto*display
-*auckland
-	city="Auckland" : city_jp="オークランド" : city_id=38
-	timedif=3 : summertime_start=10 : summertime_end=4
-	fontcolor=255
-	goto*display
-*sydney
-	city="Sydney" : city_jp="シドニー" : city_id=39
-	timedif=1 : summertime_start=10 : summertime_end=4
-	fontcolor=255
-	goto*display
+*clicked_city
+	oncmd 0
+	
+	//都市の時差情報を取得
+	notesel timedif_dat
+	noteload "data/timedif.dat"
+	
+	repeat notemax
+		notesel timedif_dat
+		noteget timedif_city_name_buf, cnt
+		
+		if timedif_city_name_buf = "["+selected_city+"]" {
+			tcnt = cnt
+			break
+		}
+	
+		await 1
+	loop
+	
+	;その都市にサマータイムがあるか取得
+	notesel timedif_dat
+	noteget summer_time_exist, (tcnt+5)
+	split summer_time_exist, " : ", not_use, summer_time_exist
+	summer_time_exist = int(summer_time_exist)
+	
+	sdim about_city, 1
+	
+	if summer_time_exist = 1 {		;サマータイムがある場合
+	
+		dim timedif_buf, 13
+	
+		repeat 15
+			notesel timedif_dat
+	
+			if cnt <= 1 {
+				noteget about_city.cnt, (cnt+tcnt+1)
+				split about_city.cnt, " : ", not_use, about_city.cnt
+			}
+			
+			if cnt >= 2 {
+				noteget timedif_buf.(cnt-2), (cnt+tcnt+1)
+	
+				;夏時間の始まり・終わりが「最終日曜日」の場合は、ひとまず"last"を"7"に置き換え
+				;"last"はsummer_start_week_numberまたはsummer_finish_week_numberで夏時間が始まる・終わる日が最終日曜日であることを示す
+				split timedif_buf.(cnt-2), " : ", not_use, timedif_buf.(cnt-2)
+				if timedif_buf.(cnt-2) = "last" : timedif_buf.(cnt-2) = "7"
+			}
+			await 1
+		loop
+	
+		city = about_city.0
+		city_jp = about_city.1
+		
+		city_id = int(timedif_buf.0)
+		timedif = double(timedif_buf.1)
+			timedif_st = timedif		;標準時の時差
+		
+		summer_start_month = int(timedif_buf.3)
+		summer_start_week_number = int(timedif_buf.4)
+		summer_start_week = int(timedif_buf.5)
+		summer_start_time = int(timedif_buf.6)
+		summer_finish_month = int(timedif_buf.7)
+		summer_finish_week_number = int(timedif_buf.8)
+		summer_finish_week = int(timedif_buf.9)
+		summer_finish_time = int(timedif_buf.10)
+		hemisphere = timedif_buf.11
+		font_color = int(timedif_buf.12)
+		
+	}else{							;サマータイムがない場合
+	
+		dim timedif_buf, 3
+		
+		repeat 6
+			notesel timedif_dat
+	
+			if cnt <= 1 {
+				noteget about_city.cnt, (cnt+tcnt+1)
+				split about_city.cnt, " : ", not_use, about_city.cnt
+			}
+			
+			if cnt >= 2 {
+				noteget timedif_buf.(cnt-2), (cnt+tcnt+1)
+				split timedif_buf.(cnt-2), " : ", not_use, timedif_buf.(cnt-2)
+			}
+			await 1
+		loop
+		
+		city = about_city.0
+		city_jp = about_city.1
+		
+		city_id = int(timedif_buf.0)
+		timedif = double(timedif_buf.1)
+		
+		font_color = int(timedif_buf.3)
+		
+	}
+	
+	displayed_time_of_the_city = 0
+	got_summer_time_hour = -1
 	
 *display
 	if from_game1=1 : return : else : from_game1=0		;*game1から来た場合、戻る
@@ -505,132 +430,200 @@
 	redraw 0
 	
 	//都市の概要を読み込み
+	if displayed_time_of_the_city = 0 {
 		notesel about_city
 		noteload"data/about_city.txt"
 		
 		buffer 4
 		picload "i/"+city+".jpg":gblur 1
-		gsel 0
-		
-		about_start = instr (about_city,0,""+city+"{") + strlen(city) +2
-		about_end = instr (about_city,about_start,"}")
-		about_the_city = strmid (about_city,about_start,about_end)
-		
-		if scroll=0{
-			pos 0,0:gmode 0:gcopy 4,0,0,1024,640
-			color 0,0,0:gmode 4,,,60
-			boxfa 0,0,1024,640
-		}
-		if scroll=1{
-			pos 750,0:gmode 0:gcopy 4,750,0,900,640
-			color 0,0,0:gmode 4,,,60
-			boxfa 750,0,1024,640
-		
-			scroll=0
-		}
+		gsel 0, 2
+	}
+	
+	about_start = instr (about_city,0,""+city+"{") + strlen(city) +2
+	about_end = instr (about_city,about_start,"}")
+	about_the_city = strmid (about_city,about_start,about_end)
+	
+	if scroll=0{
+		pos 0,0:gmode 0:gcopy 4,0,0,1024,640
+		color 0,0,0:gmode 4,,,60
+		boxfa 0,0,1024,640
+	}
+	if scroll=1{
+		pos 750,0:gmode 0:gcopy 4,750,0,900,640
+		color 0,0,0:gmode 4,,,60
+		boxfa 750,0,1024,640
+	
+		scroll=0
+	}
 	
 	//メニュー
-	
-		color 195,195,195:line 760,30,760,610
+	color 195,195,195:line 760,30,760,610
+	repeat 40
+		font "Noto Sans CJK SC Light",16
+		color 255,255,255
+		pos 790,40+24*(cnt+top)
+		mes cityname.cnt
 		
-		repeat 40
+		await 1
+	loop
 	
-			font "Noto Sans CJK SC Light",16
-			color 255,255,255
-			pos 790,40+24*(cnt+top)
-			mes cityname.cnt
+	color 0,100,255 : boxf 785,40+24*(city_id+top), 990,40+24*(city_id+top+1)
+	color 255,255,255 : pos 790,40+24*(city_id+top) : mes cityname.city_id
 	
-			await 0.1
-		
-		loop
-	
-		color 0,100,255 : boxf 785,40+24*(city_id+top), 990,40+24*(city_id+top+1)
-		color 255,255,255 : pos 790,40+24*(city_id+top) : mes cityname.city_id
-	
-		pos 760,0:gmode 0:gcopy 4,760,0,235,42
-		pos 765,620:gmode 0:gcopy 4,765,620,235,42
-		color 0,0,0:gmode 4,,,60
-		boxfa 760,0,995,42
-		boxfa 765,620,765+235,620+42
+	pos 760,0:gmode 0:gcopy 4,760,0,235,42
+	pos 765,620:gmode 0:gcopy 4,765,620,235,42
+	color 0,0,0:gmode 4,,,60
+	boxfa 760,0,995,42
+	boxfa 765,620,765+235,620+42
 	
 	//タイトルとボタン
-		font "Noto Sans CJK SC Light",14 : color 255,255,255 : pos 10,3:mes"World Timepiece"
-		pos 940,5:gmode 2:gcopy 5,0,0,20,20		;ゲームボタン
-		pos 970,5:gmode 2:gcopy 13,0,0,20,20	;情報
-		pos 1000,5:gmode 2:gcopy 1,0,0,20,20	;閉じるボタン
+	font "Noto Sans CJK SC Light",14 : color 255,255,255 : pos 10,3:mes"World Timepiece"
+	pos 910,5:gmode 2:gcopy 5,0,0,20,20		;ゲームボタン
+	pos 940,5:gmode 2:gcopy 14,0,0,20,20	;地球時計
+	pos 970,5:gmode 2:gcopy 13,0,0,20,20	;情報
+	pos 1000,5:gmode 2:gcopy 1,0,0,20,20	;閉じるボタン
 	
 	redraw 1
 	
+	//時刻をNICTから取得（オフラインモードが0のとき）
+	if offline_mode = 0 and return_to_display = 0 {
+		#include "hspinet.as"
+		netinit
+		neturl "http://ntp-a1.nict.go.jp/cgi-bin/"
+		netrequest_get "json"
+		repeat
+			netexec res
+			if res>0 : break
+	
+			;取得できない場合は自動でオフラインモードに切り替え、もう一度*displayへ戻る
+			if res<0 {
+				dialog"現在時刻の読み込みに失敗しました。\nオフラインモードに切り替え、お使いのパソコンから時刻を取得します。"
+				offline_mode = 1
+				goto*display
+			}
+			await 50
+		loop
+		netgetv buf
+		lf="0"
+		poke lf,0,10
+		strrep buf,lf,"\n"
+		jsonopen p1,buf
+		jsongeti time,"st",p1
+		day=time/86400
+		time+=3600*9
+		time\=86400
+		jhour=time/3600
+		jminute=(time/60)\60
+		jsecond=time\60 + 1			;最初はたいてい1秒ずれるのであらかじめ1秒足しておく（毎分0秒になると直ります）
+	
+		jti_after_get_time = jti
+	
+		;夏時間がある場合は夏時間の期間内かどうかを判断
+		if summer_time_exist = 1 {
+			
+			hour = jhour + timedif_st				;一旦標準時に戻す
+			if hour < 0 {	;表示する時間がマイナスになった場合
+				hour = hour+24
+			}
+			if hour > 23{	;表示する時間が24時以上になった場合
+				hour = hour-24
+			}
+			
+			gosub*get_summer_time
+		}
+		
+		hour = timedif + jhour
+	}
+	
+	//時刻をパソコンから取得（オフラインモード適用時）
+	if offline_mode = 1 and return_to_display = 0 {
+		jhour = gettime(4)
+		jminute = gettime(5)
+		jsecond = gettime(6)
+	
+		;夏時間がある場合は夏時間の期間内かどうかを判断
+		if summer_time_exist = 1 {
+			
+			hour = jhour + timedif_st				;一旦標準時に戻す
+			gosub*get_summer_time
+		}
+		
+		hour = timedif + jhour
+	}
+	
 *display2
-	oncmd 0
-	
 	redraw 0
-	
-		//マウスホイールが動いたとき
-			mousew_buf=mousew
-			if mousew_buf>24 and top<0{
-				top=top+1
-				scroll=1
-				goto*display
-			}
-			if mousew_buf<-24 and top>-16{
-				top=top-1
-				scroll=1
-				goto*display
-			}
+		
+		on_click = 1
 		
 		pos 0,25:gmode 0:gcopy 4,0,25,750,640
 		color 0,0,0:gmode 4,,,60
 		boxfa 0,25,750,640
 	
-		if gettime(6) = 0 or on_click = 0 {
-		
-			if summertime_start!0{	;サマータイムがある場合
-			
-				if summertime_start <= gettime(1) & summertime_end >=gettime(1){	;北半球の夏時間
-					summertime=1
-				}else{
-					summertime=0
-				}
-				
-				if summertime_start>summertime_end and summertime_start <= gettime(1) & 12 >=gettime(1) or summertime_start>summertime_end and 1 <= gettime(1) & summertime_end >=gettime(1){	;南半球の夏時間
-					summertime=1
-				}
-				
-			}else{
-				summertime=0
-			}
-		
-			hour = timedif + gettime(4) + summertime		;表示する現地時間
-			
-			minute=gettime(5)
-			if timedif = -3.5{	;UTC5:30（インド時間）の場合
-				minute= gettime(5) - 30
-				if minute >= 0 : hour = gettime(4) - 3
-				if minute <  0 : hour = gettime(4) - 4
-			
-				if minute < 0  : minute = minute + 60
-				if minute > 59 : minute = minute - 60
-			}
-		
-			if hour<0 {	;表示する時間がマイナスになった場合
-				hour=hour+24
-			}
-			if hour>23{	;表示する時間が24時以上になった場合
-				hour=hour-24
-			}
+		jti++
 	
-			on_click = 1
-	
+		if jti >= 16 {
+			jti = 0
 		}
 	
-		//メモ：インド時間でずれる場合あり（例：日本時間が0時29分→0時30分のとき、インド時間が20時59分→20時00分になる）
+		if jti = jti_after_get_time {
+			jsecond++
+			if jsecond >= 60 {
+				jminute ++
+				jsecond = 0
+			}
+			if jminute >= 60 {
+				jhour ++
+				jminute = 0
+			}
+			if jhour >= 24 {
+				jhour = 0
+			}
+		}
+	
+		second = jsecond
+		minute = jminute
+		
+		if timedif = -3.5 {		;UTC5:30（インド時間）の場合
+			minute= jminute - 30
+			if minute >= 0 : hour = jhour - 3
+			if minute <  0 : hour = jhour - 4
+			
+			if minute < 0  : minute = minute + 60
+			if minute > 59 : minute = minute - 60
+		}
+	
+		if second > 59 {
+			second = 0
+		}
+		if minute > 59 {
+			minute = 0
+		}
+	
+		;夏時間がある場合は夏時間を取得（毎時0分）
+		if summer_time_exist = 1 and minute = 0 and second = 0 and jti = 0 {
+			oncmd 0
+			
+			hour = jhour + timedif_st				;一旦標準時に戻す
+			gosub *get_summer_time					;*get_summer_timeにて夏時間期間中か判定
+		}
+		
+		if jsecond = 0 {
+			hour = jhour + timedif
+		}
+	
+		if hour < 0 {	;表示する時間がマイナスになった場合
+			hour = hour+24
+		}
+		if hour > 23{	;表示する時間が24時以上になった場合
+			hour = hour-24
+		}
 		
 		s=strf("%02d",hour)+":"
 		s+=strf("%02d",minute)
-		sec="."+strf("%02d",gettime(6))
+		sec="."+strf("%02d",second)
 		
-		color fontcolor,fontcolor,fontcolor
+		color font_color, font_color, font_color
 		font "Noto Sans CJK SC Light",90:pos 100,50:mes s
 		font "Noto Sans CJK SC Light",40:pos 320,110:mes sec
 		
@@ -640,6 +633,33 @@
 		pos 110,235:mes about_the_city
 		
 	redraw 1
+	
+	oncmd 0
+	
+	//マウスホイールが動いたとき
+	mousew_buf=mousew
+	if mousew_buf>24 and top<0{
+		top=top+1
+		scroll=1
+		
+		return_to_display = 1
+		redraw 1
+		goto *display
+	}
+	if mousew_buf<-24 and top>-16{
+		top=top-1
+		scroll=1
+	
+		return_to_display = 1
+		redraw 1
+		goto *display
+	}
+	
+	if return_to_display = 1 {
+		return_to_display = 0
+	}
+	
+	displayed_time_of_the_city = 1
 	
 	oncmd 1
 	
@@ -667,7 +687,8 @@
 	
 	color 230,230,230:boxf
 	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
-	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 910,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 940,5:gmode 0:gcopy 14,0,20,20,20	;地球時計
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
 	
@@ -748,18 +769,21 @@
 		if 572<= mousex & 672 >= mousex and 550<= mousey & 570 >= mousey : level=3:goto*game3_random
 	}
 	
-	if 940<= mousex & 970 >= mousex and 5<= mousey & 25 >= mousey{
+	if 910<= mousex & 940 >= mousex and 5<= mousey & 25 >= mousey{
 		city=city_buf : city_jp=city_jp_buf : city_id=city_id_buf
 		timedif=timedif_buf : summertime_start=summertime_start_buf : summertime_end=summertime_end_buf
 		fontcolor=fontcolor_buf
 		from_game1=0
-		goto*display
+		goto*clicked_city
+	}
+	if 940<= mousex & 970 >= mousex and 5<= mousey & 25 >= mousey{
+		goto*earth_clock
 	}
 	if 970<= mousex & 1000 >= mousex and 5<= mousey & 25 >= mousey{
 		goto*about
 	}
 	if 1000<= mousex & 1024 >= mousex and 5<= mousey & 25 >= mousey{
-		end
+		goto*exit
 	}
 	
 //答え合わせ
@@ -901,55 +925,215 @@
 	
 	color 230,230,230:boxf
 	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
-	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 910,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 940,5:gmode 0:gcopy 14,0,20,20,20	;地球時計
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
 	
 	games=1
 	
-	//出題する都市名と時差を取得する
-	random_city_id_2 = random_city_id.number	;random_city_id.numberをif文内で使うとバグるのでrandom_city_id_2に置き換えます
-	from_game1 = 1 : gosub*click
+	//都市の時差情報を取得
+	notesel timedif_dat
+	noteload "data/timedif.dat"
 	
-	//現地時刻を取得
-	if summertime_start!0{	;サマータイムがある場合
+	tcnt = 0
+	
+	repeat notemax
+		notesel timedif_dat
+		noteget timedif_city_name_buf, cnt
 		
-		if summertime_start <= gettime(1) & summertime_end >=gettime(1){	;北半球の夏時間
-			summertime=1
-		}else{
-			summertime=0
+		if timedif_city_name_buf = "city_id : "+random_city_id.number+"" {
+			tcnt = cnt
+			break
 		}
-		
-		if summertime_start>summertime_end and summertime_start <= gettime(1) & 12 >=gettime(1) or summertime_start>summertime_end and 1 <= gettime(1) & summertime_end >=gettime(1){	;南半球の夏時間
-			summertime=1
-		}
+	
+		await 1
+	loop
+	
+	tcnt - 3
+	
+	;その都市にサマータイムがあるか取得
+	notesel timedif_dat
+	noteget summer_time_exist, (tcnt+5)
+	split summer_time_exist, " : ", not_use, summer_time_exist
+	summer_time_exist = int(summer_time_exist)
+	
+	sdim about_city, 1
+	
+	if summer_time_exist = 1 {		;サマータイムがある場合
+	
+		dim timedif_buf, 13
+	
+		repeat 15
+			notesel timedif_dat
+	
+			if cnt <= 1 {
+				noteget about_city.cnt, (cnt+tcnt+1)
+				split about_city.cnt, " : ", not_use, about_city.cnt
+			}
 			
-	}else{
-		summertime=0
-	}
+			if cnt >= 2 {
+				noteget timedif_buf.(cnt-2), (cnt+tcnt+1)
+	
+				;夏時間の始まり・終わりが「最終日曜日」の場合は、ひとまず"last"を"7"に置き換え
+				;"last"はsummer_start_week_numberまたはsummer_finish_week_numberで夏時間が始まる・終わる日が最終日曜日であることを示す
+				split timedif_buf.(cnt-2), " : ", not_use, timedif_buf.(cnt-2)
+				if timedif_buf.(cnt-2) = "last" : timedif_buf.(cnt-2) = "7"
+			}
+			await 1
+		loop
+	
+		random_city = about_city.0
+		random_city_jp = about_city.1
 		
-	hour=timedif+gettime(4)+summertime	;表示する現地時間
+		random_city_id = int(timedif_buf.0)
+		random_timedif = double(timedif_buf.1)
+			random_timedif_st = timedif		;標準時の時差
 		
-	minute=gettime(5)
-	if timedif=-3.5{	;UTC5:30（インド時間）の場合
-		minute=gettime(5)-30
-		if minute>0:hour=gettime(4)-3
-		if minute<0:hour=gettime(4)-4
+		summer_start_month = int(timedif_buf.3)
+		summer_start_week_number = int(timedif_buf.4)
+		summer_start_week = int(timedif_buf.5)
+		summer_start_time = int(timedif_buf.6)
+		summer_finish_month = int(timedif_buf.7)
+		summer_finish_week_number = int(timedif_buf.8)
+		summer_finish_week = int(timedif_buf.9)
+		summer_finish_time = int(timedif_buf.10)
+		hemisphere = timedif_buf.11
 		
-		if minute<0:minute=minute+60
-		if minute>59:minute=minute-60
+	}else{							;サマータイムがない場合
+	
+		dim timedif_buf, 3
+		
+		repeat 6
+			notesel timedif_dat
+	
+			if cnt <= 1 {
+				noteget about_city.cnt, (cnt+tcnt+1)
+				split about_city.cnt, " : ", not_use, about_city.cnt
+			}
+			
+			if cnt >= 2 {
+				noteget timedif_buf.(cnt-2), (cnt+tcnt+1)
+				split timedif_buf.(cnt-2), " : ", not_use, timedif_buf.(cnt-2)
+			}
+			await 1
+		loop
+		
+		random_city = about_city.0
+		random_city_jp = about_city.1
+		
+		random_city_id = int(timedif_buf.0)
+		random_timedif = double(timedif_buf.1)
+		
 	}
 	
-	if hour<0 {	;表示する時間がマイナスになった場合
-		hour=hour+24
+	if offline_mode = 0 and return_to_display = 0 {
+		#include "hspinet.as"
+		netinit
+		neturl "http://ntp-a1.nict.go.jp/cgi-bin/"
+		netrequest_get "json"
+		repeat
+			netexec res
+			if res>0 : break
+			await 50
+		loop
+		netgetv buf
+		lf="0"
+		poke lf,0,10
+		strrep buf,lf,"\n"
+		jsonopen p1,buf
+		jsongeti time,"st",p1
+		day=time/86400
+		time+=3600*9
+		time\=86400
+		jhour=time/3600
+		jminute=(time/60)\60
+		jsecond=time\60 + 1			;最初はたいてい1秒ずれるのであらかじめ1秒足しておく（毎分0秒になると直ります）
+	
+		;夏時間がある場合は夏時間の期間内かどうかを判断
+		if summer_time_exist = 1 {
+			
+			hour = jhour + random_timedif_st				;一旦標準時に戻す
+			if hour < 0 {	;表示する時間がマイナスになった場合
+				hour = hour+24
+			}
+			if hour > 23{	;表示する時間が24時以上になった場合
+				hour = hour-24
+			}
+			
+			gosub*get_summer_time
+		}
+		
+		hour = random_timedif + jhour
 	}
-	if hour>23{	;表示する時間が24時以上になった場合
-		hour=hour-24
+	
+	//時刻をパソコンから取得（オフラインモード適用時）
+	if offline_mode = 1 and return_to_display = 0 {
+		jhour = gettime(4)
+		jminute = gettime(5)
+		jsecond = gettime(6)
+	
+		;夏時間がある場合は夏時間の期間内かどうかを判断
+		if summer_time_exist = 1 {
+			
+			hour = jhour + random_timedif_st				;一旦標準時に戻す
+			gosub*get_summer_time
+		}
+		
+		hour = random_timedif + jhour
+	}
+	
+	if jsecond >= 60 {
+		jminute ++
+		jsecond = 0
+	}
+	if jminute >= 60 {
+		jhour ++
+		jminute = 0
+	}
+	if jhour >= 24 {
+		jhour = 0
+	}
+	
+	second = jsecond
+	minute = jminute
+		
+	if random_timedif = -3.5 {		;UTC5:30（インド時間）の場合
+		minute= jminute - 30
+		if minute >= 0 : hour = jhour - 3
+		if minute <  0 : hour = jhour - 4
+		
+		if minute < 0  : minute = minute + 60
+		if minute > 59 : minute = minute - 60
+	}
+	
+	if second > 59 {
+		second = 0
+	}
+	if minute > 59 {
+		minute = 0
+	}
+	
+	;夏時間がある場合は夏時間を取得（毎時0分）
+	if summer_time_exist = 1 and minute = 0 and second = 0 and jti = 0 {
+		oncmd 0
+		
+		hour = jhour + random_timedif_st				;一旦標準時に戻す
+		gosub *get_summer_time					;*get_summer_timeにて夏時間期間中か判定
 	}
 		
-	minute=strf("%02d",minute)
+	if jsecond = 0 {
+		hour = jhour + random_timedif
+	}
 	
-	correct=hour	;注：出題するのは○時(hour)のみ、○分(minute)は全選択肢で同じにします
+	if hour < 0 {	;表示する時間がマイナスになった場合
+		hour = hour+24
+	}
+	if hour > 23{	;表示する時間が24時以上になった場合
+		hour = hour-24
+	}
+	
+	correct=int(hour)	;注：出題するのは○時(hour)のみ、○分(minute)は全選択肢で同じにします
 	
 	//各選択肢に表示する時刻を決める
 	select_g1.(correct_answer_button.number)=correct
@@ -983,17 +1167,17 @@
 	}
 	
 	//ヒント（レベル4の場合はヒント無し）
-	if level=1 : hinto="ヒント：日本と"+city_jp+"の時差は"+(timedif+summertime)+"時間です。"
-	if level=1 and (timedif+summertime)>0 : hinto="ヒント：日本と"+city_jp+"の時差は+"+(timedif+summertime)+"時間です。"
+	if level=1 : hinto="ヒント：日本と"+random_city_jp+"の時差は"+int(random_timedif)+"時間です。"
+	if level=1 and int(random_timedif)>0 : hinto="ヒント：日本と"+random_city_jp+"の時差は+"+int(random_timedif)+"時間です。"
 	
-	if level=2 or level=3 : hinto="ヒント："+city_jp+"はUTC"+(9 + timedif +summertime)+"です。"
-	if (level=2 or level=3) and (9 + timedif +summertime)>=0 : hinto="ヒント："+city_jp+"はUTC+"+(9 + timedif +summertime)+"です。"
+	if level=2 or level=3 : hinto="ヒント："+random_city_jp+"はUTC"+(9 + int(random_timedif))+"です。"
+	if (level=2 or level=3) and (9 + int(random_timedif))>=0 : hinto="ヒント："+random_city_jp+"はUTC+"+(9 + int(random_timedif))+"です。"
 	
 	if level=4 : hinto=""
 	
 	//都市がデリーだった場合、ヒントの内容を少し変える
-	if level=1 and city_jp="デリー" : hinto="ヒント：日本と"+city_jp+"の時差は-3時間30分です。"
-	if level=2 or level=3 and city_jp="デリー" : hinto="ヒント："+city_jp+"はUTC5:30です。"
+	if level=1 and random_city_jp="デリー" : hinto="ヒント：日本と"+random_city_jp+"の時差は-3時間30分です。"
+	if level=2 or level=3 and city_jp="デリー" : hinto="ヒント："+random_city_jp+"はUTC5:30です。"
 	
 	//問題の表示
 	x=1024
@@ -1011,7 +1195,7 @@
 		gsk_x=gsk_x/2
 		
 		font "Noto Sans CJK SC Light",30
-		color 0,142,148 : cmes ""+city_jp+"の現地時刻は何時何分でしょう？" ,x,200,x+824,500
+		color 0,142,148 : cmes ""+random_city_jp+"の現地時刻は何時何分でしょう？" ,x,200,x+824,500
 		font "Noto Sans CJK SC Light",14
 		color 0,142,148 : cmes ""+hinto+"" ,x,250,x+824,500
 	
@@ -1033,7 +1217,7 @@
 	color 230,230,230:boxf 0,25,1024,640
 	
 	font "Noto Sans CJK SC Light",30
-	color 0,142,148 : cmes ""+city_jp+"の現地時刻は何時何分でしょう？" ,0,200,1024,500
+	color 0,142,148 : cmes ""+random_city_jp+"の現地時刻は何時何分でしょう？" ,0,200,1024,500
 	font "Noto Sans CJK SC Light",14
 	color 0,142,148 : cmes ""+hinto+"" ,0,250,1024,500
 	
@@ -1075,7 +1259,7 @@
 		gsk_x=gsk_x/2
 		
 		font "Noto Sans CJK SC Light",30
-		color 0,142,148 : cmes ""+city_jp+"の現地時刻は何時何分でしょう？" ,x,200,x+824,500
+		color 0,142,148 : cmes ""+random_city_jp+"の現地時刻は何時何分でしょう？" ,x,200,x+824,500
 		font "Noto Sans CJK SC Light",14
 		color 0,142,148 : cmes ""+hinto+"" ,x,250,x+824,500
 	
@@ -1103,7 +1287,7 @@
 		if status="mistake" : cmes "不正解!",0,y2+10,1024,640
 		
 		font "Noto Sans CJK SC Light",16
-		cmes ""+city_jp+"の現地時刻は"+correct+":"+minute+"でした！",0,y2+60,1024,640
+		cmes ""+random_city_jp+"の現地時刻は"+correct+":"+minute+"でした！",0,y2+60,1024,640
 	
 		font "Noto Sans CJK SC Light",14
 		pos 407,y2+135:gcopy 9,0,0,100,20 : color 255,255,255:cmes"次へ",407,y2+135-2,507,y+155
@@ -1127,7 +1311,7 @@
 	if status="mistake" : cmes "不正解!",0,310,1024,400
 	
 	font "Noto Sans CJK SC Light",16
-	cmes ""+city_jp+"の現地時刻は"+correct+":"+minute+"でした！",0,360,1024,640
+	cmes ""+random_city_jp+"の現地時刻は"+correct+":"+minute+"でした！",0,360,1024,640
 	
 	font "Noto Sans CJK SC Light",14
 	pos 407,435:gcopy 9,0,0,100,20 : color 255,255,255:cmes"次へ",407,435-2,507,455
@@ -1327,7 +1511,8 @@
 	
 	color 230,230,230:boxf
 	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
-	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 910,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 940,5:gmode 0:gcopy 14,0,20,20,20	;地球時計
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
 	
@@ -1820,7 +2005,8 @@
 	
 	color 230,230,230:boxf
 	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
-	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 910,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 940,5:gmode 0:gcopy 14,0,20,20,20	;地球時計
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
 	
@@ -2220,13 +2406,158 @@
 		goto*game
 	}
 	return
+
+*earth_clock
+	clrobj
+	
+	onclick gosub *click
+	now="earth_clock"
+	
+	jti_e = 0
+	
+	randomize
+	
+	buffer 16, 1024, 640
+	 color : boxf
+	 repeat 100
+		 color 255, 255, 255
+		 pset rnd(1024), rnd(640)
+		 await 1
+	 loop
+		
+	gsel 0, 2
+	
+*earth_clock_2
+	oncmd 0
+		
+		redraw 0
+		
+		pos 0, 0 : gmode 0
+		gcopy 16, 0, 0, 1024, 640
+		
+		font "Noto Sans CJK SC Light",14 : color 255, 255, 255 : pos 10,3:mes"World Timepiece"
+		pos 910,5:gmode 2:gcopy 5,0,40,20,20	;ゲームボタン
+		pos 940,5:gmode 2:gcopy 14,0,0,20,20	;地球時計
+		pos 970,5:gmode 2:gcopy 13,0,0,20,20	;情報
+		pos 1000,5:gmode 2:gcopy 1,0,0,20,20	;閉じるボタン
+		
+		jti_e++
+	
+		if jti_e >= 16 {
+			jti_e = 0
+		}
+	
+		if jti_e = jti_e_after_get_time {
+			jsecond++
+			if jsecond >= 60 {
+				jminute ++
+				jsecond = 0
+			}
+			if jminute >= 60 {
+				jhour ++
+				jminute = 0
+			}
+			if jhour >= 24 {
+				jhour = 0
+			}
+		}
+	
+		second = jsecond
+		minute = jminute
+		
+		if timedif = -3.5 {		;UTC5:30（インド時間）の場合
+			minute= jminute - 30
+			if minute >= 0 : hour = jhour - 3
+			if minute <  0 : hour = jhour - 4
+			
+			if minute < 0  : minute = minute + 60
+			if minute > 59 : minute = minute - 60
+		}
+	
+		if second > 59 {
+			second = 0
+		}
+		if minute > 59 {
+			minute = 0
+		}
+	
+		;夏時間がある場合は夏時間を取得（毎時0分）
+		if summer_time_exist = 1 and minute = 0 and second = 0 and jti = 0 {
+			oncmd 0
+			
+			hour = jhour + timedif_st				;一旦標準時に戻す
+			gosub *get_summer_time					;*get_summer_timeにて夏時間期間中か判定
+		}
+		
+		if jsecond = 0 {
+			hour = jhour + timedif
+		}
+		
+		if hour < 0 {	;表示する時間がマイナスになった場合
+			hour = hour+24
+		}
+		if hour > 23{	;表示する時間が24時以上になった場合
+			hour = hour-24
+		}
+		
+		s=strf("%02d",hour)+":"
+		s+=strf("%02d",minute)
+		sec="."+strf("%02d",second)
+	
+		js=strf("%02d",jhour)+":"
+		js+=strf("%02d",jminute)
+		jsec="."+strf("%02d",jsecond)
+		
+		//太陽の描写
+		color 155,69,0:circle 800,100,1240,540
+	
+		//EarthとSunの文字を表示
+		color 255,255,255
+		font "Noto Sans CJK SC Light",16
+		cmes"Earth", 0, 410, 1024, 430
+		cmes"Sun"  , 900, 550, 1024, 580
+		
+		gmode 2, 200, 200
+		//地球を表示、時間に応じて地球を回転させる 角度は1時間あたり15°、1分あたり0.25°、1秒あたり約0.00416°　角度をdeg2radでラジアンに変換する
+		pos 1024 / 2, 640 / 2 : grotate 15, 0, 0, deg2rad( 360- (jhour*15) - (0.25*jminute) - (0.00416*jsecond) ), 200, 200
+	
+		//太陽の影の部分（＝陽があったっていない部分）を描写
+		month = gettime(1)
+		
+		color 10,10,10:gmode 4,,,50
+		if month <= 5 {
+			boxfa 412, 220, (562 - 18 * month), 420
+		}
+		if month = 6 {
+			boxfa 412, 220, (412 + 40), 420
+		}
+		if month >= 7 {
+			boxfa 412, 220, (422 + 18 * (month / 2)), 420
+		}
+	
+		//現在時刻
+		font "Noto Sans CJK SC Light" ,26 : color 255,255,255
+		cmes""+cityname(city_id)+"\n"+s+""+sec+"", 0, 100, 1024, 180
+	
+		//東京の現在時刻（東京以外の都市を表示しているときのみ）
+		if city ! "Tokyo" {
+			font "Noto Sans CJK SC Light" ,16 : color 255,255,255
+			cmes "Tokyo, Japan\n"+js+""+jsec+"", 0, 300, 600, 450
+		}
+	
+		redraw 1
+	
+	oncmd 1
+	
+	return
 	
 *about
 	clrobj
 	
 	color 230,230,230:boxf
 	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
-	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 910,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 940,5:gmode 0:gcopy 14,0,20,20,20	;地球時計
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
 	
@@ -2244,9 +2575,285 @@
 	font "Noto Sans CJK SC Light",16 : color 0,0,0
 	cmes "Version "+version+"\nBuild "+build+"\n\nLast updated "+date+"",0,250,1024,350
 	
+	objsize 13, 13
+	pos 445, 440 : chkbox "", offline_mode
+	font "Noto Sans CJK SC Light",14 : color 0,0,0
+	pos 465, 435 : mes "オフラインモード"
+	
 	redraw 1
 	stop
 	
+*get_summer_time
+	;夏時間等を調節
+	
+	;今日が第何週目の何曜日か取得
+	today = gettime(3)
+	week = gettime(2)
+	month = gettime(1)
+	
+	;現地の日時がまだ昨日だった場合
+	if jhour + timedif < 0 {
+		today -= 1
+		week -= 1
+	}
+	;現地の日時がもう明日だった場合
+	if jhour + timedif > 24 {
+		today += 1
+		week += 1
+	}
+	
+	;曜日がマイナスになった場合
+	if week < 0 {
+		week = 6
+	}
+	;曜日が7以上になった場合
+	if week >= 7 {
+		week = 0
+	}
+	
+	;日付が0以下になってしまった場合
+	if today <= 0 {
+		month -= 1
+		over_day = 1
+	}
+	
+*get_days_the_month
+	
+	;今月の日数を確認
+	if month = 1 or month = 3 or month = 5 or month = 7 or month = 8 or month = 10 or month = 12 {
+		days_the_month = 31
+	}
+	if month = 4 or month = 6 or month = 9 or month = 11 {
+		days_the_month = 30
+	}
+	if month = 2 and gettime(0) \ 4 = 0 {
+		days_the_month = 29
+	} else : if month = 2 {
+		days_the_month = 28
+	}
+	
+	;今日の日付が今月の日数を超えた場合
+	if today > days_the_month {
+		month += 1
+		today = 1
+		goto*get_days_the_month
+	}
+	
+	;日付が0以下になってしまった場合、前の月の最終日に日付を合わせる
+	if over_day = 1 {
+		over_day = 0
+		today = days_the_month
+	}
+	
+	;今月の1日の曜日を取得
+	week_of_first_day = week + 1
+	
+	repeat today
+		week_of_first_day --
+		
+		if week_of_first_day <= 0 and (today-cnt) ! 1 {
+			week_of_first_day = 7
+		}
+		await 1
+	loop
+	
+	;第1週の日数
+	first_week_days = 7 - week_of_first_day
+	
+	;今日が何週目にあたるか取得
+	if today <= first_week_days {		;今日の日付が第1週の日付の範囲内に入る場合
+	
+		number_of_week = 1
+	
+	}else{								;その他の週の場合
+		number_of_week = 0
+		
+		repeat today - first_week_days
+			if cnt \ 7 = 0 {
+				number_of_week ++
+			}
+			await 1
+		loop
+	
+		;最初の1週間分を足す
+		number_of_week += 1
+	}
+	
+	;今週の○曜日が今月の第何○曜日か取得
+	the_day = summer_start_week
+	if first_week_days >= the_day + 1 {
+		number_of_start_the_day = number_of_week - 1
+	} else {
+		if the_day = 0 {
+			number_of_start_the_day = number_of_week - 1
+		} else {
+			number_of_start_the_day = number_of_week
+		}
+	}
+	
+	the_day = summer_finish_week
+	
+	if first_week_days >= the_day + 1 {
+		number_of_finish_the_day = number_of_week - 1
+	} else {
+		if the_day = 0 {
+			number_of_finiah_the_day = number_of_week - 1
+		} else {
+			number_of_finish_the_day = number_of_week
+		}
+	}
+	
+	;夏時間の始まりまたは終わりが最終○曜日の場合
+	;最終○曜日が何周目か取得
+	;日曜日の場合
+	if summer_start_week_number = 7 and summer_start_month = month and summer_start_week = 0 {
+		number_of_week_last_sunday = 0
+		
+		repeat
+			if (cnt - first_week_days) \ 7 = 0 {
+				number_of_week_last_sunday++
+			}
+			
+			if (cnt - first_week_days) \ 7 = 0 and (cnt + 6) >= days_the_month {
+				break
+			}
+				
+			await 1
+		loop
+		
+		summer_start_week_number = number_of_week_last_sunday
+	}
+	;金曜日の場合（＝イスラエルのエルサレム、最終日曜日を基準に計算する）
+	if summer_start_week_number = 7 and summer_start_month = month and summer_start_week = 5 {
+		number_of_week_last_sunday = 0
+		
+		repeat
+			if (cnt - first_week_days) \ 7 = 0 {
+				number_of_week_last_sunday++
+			}
+			
+			if (cnt - first_week_days) \ 7 = 0 and (cnt + 6) >= days_the_month {
+				break
+			}
+				
+			await 1
+		loop
+	
+		if (cnt + 4) >= days_the_month {
+			summer_start_week_number = number_of_week_last_sunday - 1	;最終日曜日がある週に最終金曜日がない場合は、最終金曜日は最終日曜日よりも前の週になる
+		}else{
+			summer_start_week_number = number_of_week_last_sunday		;最終日曜日がある週に査収金曜日がある場合はそのままでよい
+		}
+	}
+	
+	;夏時間が終わる最終○曜日はWorld Timepieceに登録されている都市では最終日曜日しかないので求めるのは最終日曜日のみで良い
+	if summer_finish_week_number = 7 and summer_finish_month = month {
+		number_of_week_last_sunday = 0
+		
+		repeat
+			if (cnt - first_week_days) \ 7 = 0 {
+				number_of_week_last_sunday++
+			}
+			
+			if (cnt - first_week_days) \ 7 = 0 and (cnt + 6) >= days_the_month {
+				break
+			}
+				
+			await 1
+		loop
+		
+		summer_finish_week_number = number_of_week_last_sunday
+	}
+	
+	;今は夏時間期間中か判定
+	timedif = timedif_st
+	
+	;北半球の夏時間
+	if hemisphere = "N" {
+		if summer_start_month = month or summer_finish_month = month {
+			
+			if summer_start_month = month {														;今月が夏時間が始まる月で
+				if summer_start_week_number < number_of_start_the_day {							;なおかつ夏時間が始まる週・曜日よりも後（当日は含めない）の日なら
+					timedif++																	;夏時間を設定（+1時間）
+				}
+				if summer_start_week_number = number_of_start_the_day {							;もしも夏時間が始まる週が今週で
+					if summer_start_week > week {												;今日が夏時間が始まる曜日よりもあとならば
+						timedif++																;夏時間を設定（+1時間）
+					}
+					if summer_start_week = week {												;もしも夏時間が始まる日が今日で
+						if summer_start_time <= hour {											;夏時間が始まる時刻（標準時）よりも後なら
+							timedif++															;夏時間を設定（+1時間）
+						}
+					}
+				}
+			}
+			
+			if summer_finish_month = month {													;今月が夏時間が終わる月で
+				if summer_finish_week_number > number_of_finish_the_day {						;なおかつ夏時間が終わる週・曜日よりも前（当日は含めない）の日なら
+					timedif++																	;夏時間を設定（+1時間）
+				}
+				if summer_finish_week_number = number_of_finish_the_day {						;もしも夏時間が終わる週が今週で
+					if summer_finish_week < week {												;今日が夏時間が終わる曜日よりも前ならば
+						timedif++																;夏時間を設定（+1時間）
+					}
+					if summer_finish_week = week {												;もしも夏時間が終わる日が今日で
+						if summer_finish_time > hour {											;夏時間が終わる時刻（標準時）よりも前なら
+							timedif++															;夏時間を設定（+1時間）
+						}
+					}
+				}
+			}
+			
+		} else {
+			timedif++				;夏時間が始まる月・終わる月が今月ではないが夏時間期間中の場合は夏時間を設定（+1時間）
+		}
+	}
+	
+	;メモ:始まる日が第3日曜日で今週が第4週の場合あり
+	
+	;南半球の夏時間
+	if hemisphere = "S" {
+		if summer_start_month = month or summer_finish_month = month {
+			if summer_start_month = month {														;今月が夏時間が始まる月で
+				if summer_start_week_number < number_of_start_the_day {							;なおかつ夏時間が始まる週・曜日よりも後（当日は含めない）の日なら
+					timedif++																	;夏時間を設定（+1時間）
+				}
+				if summer_start_week_number = number_of_start_the_day {							;もしも夏時間が始まる週が今週で
+					if summer_start_week > week {												;今日が夏時間が始まる曜日よりもあとならば
+						timedif++																;夏時間を設定（+1時間）
+					}
+					if summer_start_week = week {												;もしも夏時間が始まる日が今日で
+						if summer_start_time <= hour {											;夏時間が始まる時刻（標準時）よりも後なら
+							timedif++															;夏時間を設定（+1時間）
+						}
+					}
+				}
+			}
+			if summer_finish_month = month {													;今月が夏時間が終わる月で
+				if summer_finish_week_number < number_of_finish_the_day {						;なおかつ夏時間が終わる週・曜日よりも前（当日は含めない）の日なら
+					timedif++																	;夏時間を設定（+1時間）
+				}
+				if summer_finish_week_number = number_of_finish_the_day {						;もしも夏時間が終わる週が今週で
+					if summer_finish_week < week {												;今日が夏時間が終わる曜日よりもあとならば
+						timedif++																;夏時間を設定（+1時間）
+					}
+					if summer_finish_week = week {												;もしも夏時間が終わる日が今日で
+						if summer_finish_time > hour {											;夏時間が終わる時刻（標準時）よりも後なら
+							timedif++															;夏時間を設定（+1時間）
+						}
+					}
+				}
+			}
+			
+		} else {
+			timedif++				;夏時間が始まる月・終わる月が今月ではないが夏時間期間中の場合は夏時間を設定（+1時間）
+		}
+		
+	}
+	
+	return
+	
 *ontimer
 	if now="clock" : sub=1 : gosub*display2
+	if now="earth_clock" : sub=1 : gosub*earth_clock_2
 	return
