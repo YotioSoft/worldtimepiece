@@ -334,8 +334,8 @@ city_jp : リオデジャネイロ
 city_id : 30
 timedif : -12
 summer_time : 1
-summer_start_month : 10
-summer_start_week_number : 3
+summer_start_month : 11
+summer_start_week_number : 2
 summer_start_week : 0
 summer_start_time : 0
 summer_finish_month : 2

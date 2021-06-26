@@ -1,5 +1,7 @@
 #include "user32.as"
 
+#packopt icon "i\favicon.ico"
+
 //変数の初期化
 	top=0
 
@@ -31,15 +33,6 @@
 	celload"i/earth.png",15
 	
 	gsel 0, 2
-	
-//設定の読み込み
-	notesel config
-	noteload "data/config.dat"
-	
-	noteget offline_mode_buf, 0
-	
-	split offline_mode_buf, " : ", not_use, offline_mode
-	offline_mode = int(offline_mode)
 	
 //フォントの埋め込み
 	#include "gdi32.as"
@@ -157,10 +150,6 @@
 	
 *exit
 	oncmd 0
-	
-	notesel config
-	noteadd "offline_mode : "+offline_mode+"", 0, 1
-	notesave "data/config.dat"
 	
 	end
 	
@@ -485,71 +474,19 @@
 	
 	redraw 1
 	
-	//時刻をNICTから取得（オフラインモードが0のとき）
-	if offline_mode = 0 and return_to_display = 0 {
-		#include "hspinet.as"
-		netinit
-		neturl "http://ntp-a1.nict.go.jp/cgi-bin/"
-		netrequest_get "json"
-		repeat
-			netexec res
-			if res>0 : break
+	//時刻をパソコンから取得
+	jhour = gettime(4)
+	jminute = gettime(5)
+	jsecond = gettime(6)
 	
-			;取得できない場合は自動でオフラインモードに切り替え、もう一度*displayへ戻る
-			if res<0 {
-				dialog"現在時刻の読み込みに失敗しました。\nオフラインモードに切り替え、お使いのパソコンから時刻を取得します。"
-				offline_mode = 1
-				goto*display
-			}
-			await 50
-		loop
-		netgetv buf
-		lf="0"
-		poke lf,0,10
-		strrep buf,lf,"\n"
-		jsonopen p1,buf
-		jsongeti time,"st",p1
-		day=time/86400
-		time+=3600*9
-		time\=86400
-		jhour=time/3600
-		jminute=(time/60)\60
-		jsecond=time\60 + 1			;最初はたいてい1秒ずれるのであらかじめ1秒足しておく（毎分0秒になると直ります）
-	
-		jti_after_get_time = jti
-	
-		;夏時間がある場合は夏時間の期間内かどうかを判断
-		if summer_time_exist = 1 {
+	;夏時間がある場合は夏時間の期間内かどうかを判断
+	if summer_time_exist = 1 {
 			
-			hour = jhour + timedif_st				;一旦標準時に戻す
-			if hour < 0 {	;表示する時間がマイナスになった場合
-				hour = hour+24
-			}
-			if hour > 23{	;表示する時間が24時以上になった場合
-				hour = hour-24
-			}
-			
-			gosub*get_summer_time
-		}
-		
-		hour = timedif + jhour
+		hour = jhour + timedif_st				;一旦標準時に戻す
+		gosub*get_summer_time
 	}
-	
-	//時刻をパソコンから取得（オフラインモード適用時）
-	if offline_mode = 1 and return_to_display = 0 {
-		jhour = gettime(4)
-		jminute = gettime(5)
-		jsecond = gettime(6)
-	
-		;夏時間がある場合は夏時間の期間内かどうかを判断
-		if summer_time_exist = 1 {
-			
-			hour = jhour + timedif_st				;一旦標準時に戻す
-			gosub*get_summer_time
-		}
 		
-		hour = timedif + jhour
-	}
+	hour = timedif + jhour
 	
 *display2
 	redraw 0
@@ -1027,61 +964,19 @@
 		
 	}
 	
-	if offline_mode = 0 and return_to_display = 0 {
-		#include "hspinet.as"
-		netinit
-		neturl "http://ntp-a1.nict.go.jp/cgi-bin/"
-		netrequest_get "json"
-		repeat
-			netexec res
-			if res>0 : break
-			await 50
-		loop
-		netgetv buf
-		lf="0"
-		poke lf,0,10
-		strrep buf,lf,"\n"
-		jsonopen p1,buf
-		jsongeti time,"st",p1
-		day=time/86400
-		time+=3600*9
-		time\=86400
-		jhour=time/3600
-		jminute=(time/60)\60
-		jsecond=time\60 + 1			;最初はたいてい1秒ずれるのであらかじめ1秒足しておく（毎分0秒になると直ります）
+	//時刻をパソコンから取得
+	jhour = gettime(4)
+	jminute = gettime(5)
+	jsecond = gettime(6)
 	
-		;夏時間がある場合は夏時間の期間内かどうかを判断
-		if summer_time_exist = 1 {
+	;夏時間がある場合は夏時間の期間内かどうかを判断
+	if summer_time_exist = 1 {
 			
-			hour = jhour + random_timedif_st				;一旦標準時に戻す
-			if hour < 0 {	;表示する時間がマイナスになった場合
-				hour = hour+24
-			}
-			if hour > 23{	;表示する時間が24時以上になった場合
-				hour = hour-24
-			}
-			
-			gosub*get_summer_time
-		}
-		
-		hour = random_timedif + jhour
+		hour = jhour + random_timedif_st				;一旦標準時に戻す
+		gosub*get_summer_time
 	}
-	
-	//時刻をパソコンから取得（オフラインモード適用時）
-	if offline_mode = 1 and return_to_display = 0 {
-		jhour = gettime(4)
-		jminute = gettime(5)
-		jsecond = gettime(6)
-	
-		;夏時間がある場合は夏時間の期間内かどうかを判断
-		if summer_time_exist = 1 {
-			
-			hour = jhour + random_timedif_st				;一旦標準時に戻す
-			gosub*get_summer_time
-		}
 		
-		hour = random_timedif + jhour
-	}
+	hour = random_timedif + jhour
 	
 	if jsecond >= 60 {
 		jminute ++
@@ -2574,11 +2469,6 @@
 	cmes name,0,130,1024,180
 	font "Noto Sans CJK SC Light",16 : color 0,0,0
 	cmes "Version "+version+"\nBuild "+build+"\n\nLast updated "+date+"",0,250,1024,350
-	
-	objsize 13, 13
-	pos 445, 440 : chkbox "", offline_mode
-	font "Noto Sans CJK SC Light",14 : color 0,0,0
-	pos 465, 435 : mes "オフラインモード"
 	
 	redraw 1
 	stop
