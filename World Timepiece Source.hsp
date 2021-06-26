@@ -1,10 +1,12 @@
 #include "user32.as"
 
+//変数の初期化
 	top=0
 
 	dim RECT, 4
-	title"World Timepiece 3.0"
+	title"World Timepiece 3.1"
 	
+//バッファ
 	buffer 1
 	color : boxf 0,0,20,20
 	color 255,255,255 : line 5,5,15,15 : line 15,5,5,15
@@ -26,7 +28,7 @@
 	celload"i/worldmap.png",12
 	celload"i/i.png",13
 	
-	gsel
+	gsel 0
 	
 //フォントの埋め込み
 	#include "gdi32.as"
@@ -42,11 +44,21 @@
 	#func SetLayered2 "SetLayeredWindowAttributes" int , int , int , int 
 	
 	#define WM_NCLBUTTONDOWN $000000A1
-#define HTCAPTION 2
+	#define HTCAPTION 2
+	
+	#func SetTimerA  "SetTimer"  int, int, int, int			;ウィンドウタイマーに使う
+	#func KillTimerA "KillTimer" int, int
+	#define WM_TIMER        0x0113
+	#define ID_TIMER        1
 
 	bgscr 0,1024,640
 	gsel 0,2
 	onexit *exit
+	
+//ウィンドウタイマー
+	sub=1
+	oncmd  gosub *ontimer, WM_TIMER
+	SetTimerA hwnd, ID_TIMER, 100, 0			;数値を下げれば下げるほど動作が早くなるが、バグが起こりやすくなる
 
 #module
 	
@@ -129,131 +141,131 @@
 	end
 	
 *click
-	if 790<= mousex & 990 >= mousex and 30<= mousey & 610 >= mousey{
-		if 40+24*(0+top)<= mousey & 40+24*(1+top) >= mousey{
+	if ( from_game1=0 and 790<= mousex & 990 >= mousex and 30<= mousey & 610 >= mousey ) or from_game1=1{
+		if ( from_game1=0 and 40+24*(0+top)<= mousey & 40+24*(1+top) >= mousey ) or ( from_game1=1 and random_city_id_2=0) {
 			goto*tokyo
 		}
-		if 40+24*(1+top)<= mousey & 40+24*(2+top) >= mousey{
+		if ( from_game1=0 and 40+24*(1+top)<= mousey & 40+24*(2+top) >= mousey ) or ( from_game1=1 and random_city_id_2=1) {
 			goto*vladivostok
 		}
-		if 40+24*(2+top)<= mousey & 40+24*(3+top) >= mousey{
+		if ( from_game1=0 and 40+24*(2+top)<= mousey & 40+24*(3+top) >= mousey ) or ( from_game1=1 and random_city_id_2=2 ) {
 			goto*seoul
 		}
-		if 40+24*(3+top)<= mousey & 40+24*(4+top) >= mousey{
+		if ( from_game1=0 and 40+24*(3+top)<= mousey & 40+24*(4+top) >= mousey ) or ( from_game1=1 and random_city_id_2=3 ) {
 			goto*shanghai
 		}
-		if 40+24*(4+top)<= mousey & 40+24*(5+top) >= mousey{
+		if ( from_game1=0 and 40+24*(4+top)<= mousey & 40+24*(5+top) >= mousey ) or ( from_game1=1 and random_city_id_2=4 ) {
 			goto*taipei
 		}
-		if 40+24*(5+top)<= mousey & 40+24*(6+top) >= mousey{
+		if ( from_game1=0 and 40+24*(5+top)<= mousey & 40+24*(6+top) >= mousey ) or ( from_game1=1 and random_city_id_2=5 ) {
 			goto*beijing
 		}
-		if 40+24*(6+top)<= mousey & 40+24*(7+top) >= mousey{
+		if ( from_game1=0 and 40+24*(6+top)<= mousey & 40+24*(7+top) >= mousey ) or ( from_game1=1 and random_city_id_2=6 ) {
 			goto*perth
 		}
-		if 40+24*(7+top)<= mousey & 40+24*(8+top) >= mousey{
+		if ( from_game1=0 and 40+24*(7+top)<= mousey & 40+24*(8+top) >= mousey ) or ( from_game1=1 and random_city_id_2=7 ) {
 			goto*hong_kong
 		}
-		if 40+24*(8+top)<= mousey & 40+24*(9+top) >= mousey{
+		if ( from_game1=0 and 40+24*(8+top)<= mousey & 40+24*(9+top) >= mousey ) or ( from_game1=1 and random_city_id_2=8 ) {
 			goto*jakarta
 		}
-		if 40+24*(9+top)<= mousey & 40+24*(10+top) >= mousey{
+		if ( from_game1=0 and 40+24*(9+top)<= mousey & 40+24*(10+top) >= mousey ) or ( from_game1=1 and random_city_id_2=9 ) {
 			goto*irkutsk
 		}
-		if 40+24*(10+top)<= mousey & 40+24*(11+top) >= mousey{
+		if ( from_game1=0 and 40+24*(10+top)<= mousey & 40+24*(11+top) >= mousey ) or ( from_game1=1 and random_city_id_2=10 ) {
 			goto*singapore
 		}
-		if 40+24*(11+top)<= mousey & 40+24*(12+top) >= mousey{
+		if ( from_game1=0 and 40+24*(11+top)<= mousey & 40+24*(12+top) >= mousey ) or ( from_game1=1 and random_city_id_2=11 ) {
 			goto*bangkok
 		}
-		if 40+24*(12+top)<= mousey & 40+24*(13+top) >= mousey{
+		if ( from_game1=0 and 40+24*(12+top)<= mousey & 40+24*(13+top) >= mousey ) or ( from_game1=1 and random_city_id_2=12 ) {
 			goto*delhi
 		}
-		if 40+24*(13+top)<= mousey & 40+24*(14+top) >= mousey{
+		if ( from_game1=0 and 40+24*(13+top)<= mousey & 40+24*(14+top) >= mousey ) or ( from_game1=1 and random_city_id_2=13 ) {
 			goto*karachi
 		}
-		if 40+24*(14+top)<= mousey & 40+24*(15+top) >= mousey{
+		if ( from_game1=0 and 40+24*(14+top)<= mousey & 40+24*(15+top) >= mousey ) or ( from_game1=1 and random_city_id_2=14 ) {
 			goto*dubai
 		}
-		if 40+24*(15+top)<= mousey & 40+24*(16+top) >= mousey{
+		if ( from_game1=0 and 40+24*(15+top)<= mousey & 40+24*(16+top) >= mousey ) or ( from_game1=1 and random_city_id_2=15 ) {
 			goto*moscow
 		}
-		if 40+24*(16+top)<= mousey & 40+24*(17+top) >= mousey{
+		if ( from_game1=0 and 40+24*(16+top)<= mousey & 40+24*(17+top) >= mousey ) or ( from_game1=1 and random_city_id_2=16 ) {
 			goto*jerusalem
 		}
-		if 40+24*(17+top)<= mousey & 40+24*(18+top) >= mousey{
+		if ( from_game1=0 and 40+24*(17+top)<= mousey & 40+24*(18+top) >= mousey ) or ( from_game1=1 and random_city_id_2=17 ) {
 			goto*cairo
 		}
-		if 40+24*(18+top)<= mousey & 40+24*(19+top) >= mousey{
+		if ( from_game1=0 and 40+24*(18+top)<= mousey & 40+24*(19+top) >= mousey ) or ( from_game1=1 and random_city_id_2=18 ) {
 			goto*saint_petersburg
 		}
-		if 40+24*(19+top)<= mousey & 40+24*(20+top) >= mousey{
+		if ( from_game1=0 and 40+24*(19+top)<= mousey & 40+24*(20+top) >= mousey ) or ( from_game1=1 and random_city_id_2=19 ) {
 			goto*istanbul
 		}
-		if 40+24*(20+top)<= mousey & 40+24*(21+top) >= mousey{
+		if ( from_game1=0 and 40+24*(20+top)<= mousey & 40+24*(21+top) >= mousey ) or ( from_game1=1 and random_city_id_2=20 ) {
 			goto*johannesburg
 		}
-		if 40+24*(21+top)<= mousey & 40+24*(22+top) >= mousey{
+		if ( from_game1=0 and 40+24*(21+top)<= mousey & 40+24*(22+top) >= mousey ) or ( from_game1=1 and random_city_id_2=21 ) {
 			goto*helsinki
 		}
-		if 40+24*(22+top)<= mousey & 40+24*(23+top) >= mousey{
+		if ( from_game1=0 and 40+24*(22+top)<= mousey & 40+24*(23+top) >= mousey ) or ( from_game1=1 and random_city_id_2=22 ) {
 			goto*berlin
 		}
-		if 40+24*(23+top)<= mousey & 40+24*(24+top) >= mousey{
+		if ( from_game1=0 and 40+24*(23+top)<= mousey & 40+24*(24+top) >= mousey ) or ( from_game1=1 and random_city_id_2=23 ) {
 			goto*rome
 		}
-		if 40+24*(24+top)<= mousey & 40+24*(25+top) >= mousey{
+		if ( from_game1=0 and 40+24*(24+top)<= mousey & 40+24*(25+top) >= mousey ) or ( from_game1=1 and random_city_id_2=24 ) {
 			goto*amsterdam
 		}
-		if 40+24*(25+top)<= mousey & 40+24*(26+top) >= mousey{
+		if ( from_game1=0 and 40+24*(25+top)<= mousey & 40+24*(26+top) >= mousey ) or ( from_game1=1 and random_city_id_2=25 ) {
 			goto*brussels
 		}
-		if 40+24*(26+top)<= mousey & 40+24*(27+top) >= mousey{
+		if ( from_game1=0 and 40+24*(26+top)<= mousey & 40+24*(27+top) >= mousey ) or ( from_game1=1 and random_city_id_2=26 ) {
 			goto*paris
 		}
-		if 40+24*(27+top)<= mousey & 40+24*(28+top) >= mousey{
+		if ( from_game1=0 and 40+24*(27+top)<= mousey & 40+24*(28+top) >= mousey ) or ( from_game1=1 and random_city_id_2=27 ) {
 			goto*london
 		}
-		if 40+24*(28+top)<= mousey & 40+24*(29+top) >= mousey{
+		if ( from_game1=0 and 40+24*(28+top)<= mousey & 40+24*(29+top) >= mousey ) or ( from_game1=1 and random_city_id_2=28 ) {
 			goto*accra
 		}
-		if 40+24*(29+top)<= mousey & 40+24*(30+top) >= mousey{
+		if ( from_game1=0 and 40+24*(29+top)<= mousey & 40+24*(30+top) >= mousey ) or ( from_game1=1 and random_city_id_2=29 ) {
 			goto*madrid
 		}
-		if 40+24*(30+top)<= mousey & 40+24*(31+top) >= mousey{
+		if ( from_game1=0 and 40+24*(30+top)<= mousey & 40+24*(31+top) >= mousey ) or ( from_game1=1 and random_city_id_2=30 ) {
 			goto*rio_de_janeiro
 		}
-		if 40+24*(31+top)<= mousey & 40+24*(32+top) >= mousey{
+		if ( from_game1=0 and 40+24*(31+top)<= mousey & 40+24*(32+top) >= mousey ) or ( from_game1=1 and random_city_id_2=31 ) {
 			goto*new_york
 		}
-		if 40+24*(32+top)<= mousey & 40+24*(33+top) >= mousey{
+		if ( from_game1=0 and 40+24*(32+top)<= mousey & 40+24*(33+top) >= mousey ) or ( from_game1=1 and random_city_id_2=32 ) {
 			goto*toronto
 		}
-		if 40+24*(33+top)<= mousey & 40+24*(34+top) >= mousey{
+		if ( from_game1=0 and 40+24*(33+top)<= mousey & 40+24*(34+top) >= mousey ) or ( from_game1=1 and random_city_id_2=33 ) {
 			goto*mexico_city
 		}
-		if 40+24*(34+top)<= mousey & 40+24*(35+top) >= mousey{
+		if ( from_game1=0 and 40+24*(34+top)<= mousey & 40+24*(35+top) >= mousey ) or ( from_game1=1 and random_city_id_2=34 ) {
 			goto*los_angeles
 		}
-		if 40+24*(35+top)<= mousey & 40+24*(36+top) >= mousey{
+		if ( from_game1=0 and 40+24*(35+top)<= mousey & 40+24*(36+top) >= mousey ) or ( from_game1=1 and random_city_id_2=35 ) {
 			goto*vancouver
 		}
-		if 40+24*(36+top)<= mousey & 40+24*(37+top) >= mousey{
+		if ( from_game1=0 and 40+24*(36+top)<= mousey & 40+24*(37+top) >= mousey ) or ( from_game1=1 and random_city_id_2=36 ) {
 			goto*anchorage
 		}
-		if 40+24*(37+top)<= mousey & 40+24*(38+top) >= mousey{
+		if ( from_game1=0 and 40+24*(37+top)<= mousey & 40+24*(38+top) >= mousey ) or ( from_game1=1 and random_city_id_2=37 ) {
 			goto*honolulu
 		}
-		if 40+24*(38+top)<= mousey & 40+24*(39+top) >= mousey{
+		if ( from_game1=0 and 40+24*(38+top)<= mousey & 40+24*(39+top) >= mousey ) or ( from_game1=1 and random_city_id_2=38 ) {
 			goto*auckland
 		}
-		if 40+24*(39+top)<= mousey & 40+24*(40+top) >= mousey{
+		if ( from_game1=0 and 40+24*(39+top)<= mousey & 40+24*(40+top) >= mousey ) or ( from_game1=1 and random_city_id_2=39 ) {
 			goto*sydney
 		}
 	}
 	
 	if 940<= mousex & 970 >= mousex and 5<= mousey & 25 >= mousey{
-		if now="clock":goto*game
+		if now="clock":goto*buffer_about_city
 		if now="game" or now="about" :goto*display
 	}
 	if 970<= mousex & 1000 >= mousex and 5<= mousey & 25 >= mousey{
@@ -262,6 +274,7 @@
 	if 1000<= mousex & 1024 >= mousex and 5<= mousey & 25 >= mousey{
 		end
 	}
+	
 *idou
 	if wparam == 1 {
 		sendmsg hwnd,WM_NCLBUTTONDOWN,HTCAPTION,0
@@ -474,39 +487,46 @@
 	goto*display
 	
 *display
+	if from_game1=1 : return : else : from_game1=0		;*game1から来た場合、戻る
+	
+	oncmd 1
+	
 	clrobj
+	redraw 0
 	
 	now="clock"
 	
 	onclick gosub *click
+	onkey 0
 	
 	//都市の概要を読み込み
-	notesel about_city
-	noteload"data/about_city.txt"
-	noteget about_tokyo,0
-	
-	buffer 4
-	picload "i/"+city+".jpg":gblur 1
-	gsel 0
-	
-	about_start = instr (about_city,0,""+city+"{") + strlen(city) +2
-	about_end = instr (about_city,about_start,"}")
-	about_the_city = strmid (about_city,about_start,about_end)
-	
-	if scroll=0{
-		pos 0,0:gmode 0:gcopy 4,0,0,1024,640
-		color 0,0,0:gmode 4,,,60
-		boxfa 0,0,1024,640
-	}
-	if scroll=1{
-		pos 750,0:gmode 0:gcopy 4,750,0,900,640
-		color 0,0,0:gmode 4,,,60
-		boxfa 750,0,1024,640
-	
-		scroll=0
-	}
+		notesel about_city
+		noteload"data/about_city.txt"
+		
+		buffer 4
+		picload "i/"+city+".jpg":gblur 1
+		gsel 0
+		
+		about_start = instr (about_city,0,""+city+"{") + strlen(city) +2
+		about_end = instr (about_city,about_start,"}")
+		about_the_city = strmid (about_city,about_start,about_end)
+		
+		if scroll=0{
+			pos 0,0:gmode 0:gcopy 4,0,0,1024,640
+			color 0,0,0:gmode 4,,,60
+			boxfa 0,0,1024,640
+		}
+		if scroll=1{
+			pos 750,0:gmode 0:gcopy 4,750,0,900,640
+			color 0,0,0:gmode 4,,,60
+			boxfa 750,0,1024,640
+		
+			scroll=0
+		}
 	
 	//メニュー
+		oncmd 0
+	
 		color 195,195,195:line 760,30,760,610
 		
 		font "Noto Sans CJK SC Light",16
@@ -528,12 +548,16 @@
 		boxfa 760,0,995,42
 		boxfa 765,620,765+235,620+42
 	
-	font "Noto Sans CJK SC Light",14 : color 255,255,255 : pos 10,3:mes"World Timepiece 3.0"
-	pos 940,5:gmode 2:gcopy 5,0,0,20,20	;ゲームボタン
-	pos 970,5:gmode 2:gcopy 13,0,0,20,20	;情報
-	pos 1000,5:gmode 2:gcopy 1,0,0,20,20	;閉じるボタン
+		oncmd 1
 	
-	repeat
+	//タイトルとボタン
+		font "Noto Sans CJK SC Light",14 : color 255,255,255 : pos 10,3:mes"World Timepiece 3.1"
+		pos 940,5:gmode 2:gcopy 5,0,0,20,20		;ゲームボタン
+		pos 970,5:gmode 2:gcopy 13,0,0,20,20	;情報
+		pos 1000,5:gmode 2:gcopy 1,0,0,20,20	;閉じるボタン
+	
+*display2
+	if sub=0 : repeat
 		redraw 0
 	
 		//マウスホイールが動いたとき
@@ -601,19 +625,32 @@
 		pos 110,235:mes about_the_city
 		
 		redraw 1
+		redraw 1
 		wait 1
-	loop
+	if sub=0 : loop
+	
+	if sub=1 : sub=0 : return
+	
+*buffer_about_city
+	//表示していた都市の情報を一時保存
+	city_buf=city : city_jp_buf=city_jp : city_id_buf=city_id
+	timedif_buf=timedif : summertime_start_buf=summertime_start : summertime_end_buf=summertime_end
+	fontcolor_buf=fontcolor
 	
 *game
 	status=""
 	correct_total=0
+	selected_game=0
+	from_game1=0
 	
 	now="game"
+	
+	oncmd 0		;ウィンドウタイマー割り込み一時停止
 	
 	clrobj
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.0"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
@@ -624,26 +661,25 @@
 	pos 437,150:gcopy 7,0,0,150,150
 	pos 617,150:gcopy 8,0,0,150,150
 	
-	onclick gosub*click_game
-	
 	games=0
+	onclick gosub*click_game
 	
 	repeat
 	redraw 0
-	if 257<= mousex & 407 >= mousex and 150<= mousey & 300 >= mousey{							;注：Game1はまだ未完成です
+	
+	if 257<= mousex & 407 >= mousex and 150<= mousey & 300 >= mousey{
 		selected_game=1
 		color 230,230,230:boxf 250,330,774,570
 		font "Noto Sans CJK SC Light",36:color 0,142,148
-		cmes"Coming soon...",250,400,774,550
-		;cmes"Time Quiz",300,330,724,550
+		cmes"Time Quiz",300,330,724,550
 		font "Noto Sans CJK SC Light",18
-		/*cmes"現地時間を当てるゲームです。\nLevel1はヒントが表示されますが、\nLevel2からはヒントが表示されません。",250,400,774,550
+		cmes"現地時間を当てるゲームです。\nLevel1からLevel3まではヒントが表示されますが、\nLevel4ではノーヒントです。",250,400,774,550
 	
 		font "Noto Sans CJK SC Light",14
 		pos 300,550:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Level1",300,548,400,570
 		pos 410,550:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Level2",410,548,510,570
 		pos 520,550:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Level3",520,548,620,570
-		pos 630,550:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Level4",630,548,730,570*/
+		pos 630,550:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Level4",630,548,730,570
 	}
 	if 437<= mousex & 587 >= mousex and 150<= mousey & 300 >= mousey{
 		selected_game=2
@@ -678,26 +714,32 @@
 	stop
 *click_game
 	if selected_game=1{
-		;if 300<= mousex & 400 >= mousex and 550<= mousey & 570 >= mousey : level=1:goto*game1
-		;if 410<= mousex & 510 >= mousex and 550<= mousey & 570 >= mousey : level=2:goto*game1
-		;if 520<= mousex & 620 >= mousex and 550<= mousey & 570 >= mousey : level=3:goto*game1
-		;if 630<= mousex & 730 >= mousex and 550<= mousey & 570 >= mousey : level=4:goto*game1
+		selected_game=0
+		if 300<= mousex & 400 >= mousex and 550<= mousey & 570 >= mousey : level=1:goto*game1_random
+		if 410<= mousex & 510 >= mousex and 550<= mousey & 570 >= mousey : level=2:goto*game1_random
+		if 520<= mousex & 620 >= mousex and 550<= mousey & 570 >= mousey : level=3:goto*game1_random
+		if 630<= mousex & 730 >= mousex and 550<= mousey & 570 >= mousey : level=4:goto*game1_random
 	}
 	if selected_game=2{
+		selected_game=0
 		if 300<= mousex & 400 >= mousex and 550<= mousey & 570 >= mousey : level=1:goto*game2_random
 		if 410<= mousex & 510 >= mousex and 550<= mousey & 570 >= mousey : level=2:goto*game2_random
 		if 520<= mousex & 620 >= mousex and 550<= mousey & 570 >= mousey : level=3:goto*game2_random
 		if 630<= mousex & 730 >= mousex and 550<= mousey & 570 >= mousey : level=4:goto*game2_random
 	}
 	if selected_game=3{
+		selected_game=0
 		if 352<= mousex & 452 >= mousex and 550<= mousey & 570 >= mousey : level=1:goto*game3_random
 		if 462<= mousex & 562 >= mousex and 550<= mousey & 570 >= mousey : level=2:goto*game3_random
 		if 572<= mousex & 672 >= mousex and 550<= mousey & 570 >= mousey : level=3:goto*game3_random
 	}
 	
 	if 940<= mousex & 970 >= mousex and 5<= mousey & 25 >= mousey{
-		if now="clock":goto*game
-		if now="game" or now="about" :goto*display
+		city=city_buf : city_jp=city_jp_buf : city_id=city_id_buf
+		timedif=timedif_buf : summertime_start=summertime_start_buf : summertime_end=summertime_end_buf
+		fontcolor=fontcolor_buf
+		from_game1=0
+		goto*display
 	}
 	if 970<= mousex & 1000 >= mousex and 5<= mousey & 25 >= mousey{
 		goto*about
@@ -706,7 +748,26 @@
 		end
 	}
 	
-	if games=2 and 400<= mousey & 420 >= mousey{
+	if games=1 and 400<= mousey & 420 >= mousey and status="question"{
+		if 262<= mousex & 412 >= mousex{
+			if select_g1.0=correct : goto*game1_correct :else: goto*game1_mistake
+		}
+		if 422<= mousex & 572 >= mousex{
+			if select_g1.1=correct : goto*game1_correct :else: goto*game1_mistake
+		}
+		if 582<= mousex & 732 >= mousex{
+			if select_g1.2=correct : goto*game1_correct :else: goto*game1_mistake
+		}
+	}
+	
+	if games=1 and status="correct" and 407<= mousex & 507 >= mousex and 430<= mousey & 450 >= mousey{
+		goto*game1
+	}
+	if games=1 and status="mistake" and 407<= mousex & 507 >= mousex and 430<= mousey & 450 >= mousey{
+		goto*game1
+	}
+	
+	if games=2 and 400<= mousey & 420 >= mousey and status="question"{
 		if gametype="select3"{
 			if 262<= mousex & 412 >= mousex{
 				if select(no.0)=correct : goto*game2_correct :else: goto*game2_mistake
@@ -732,7 +793,7 @@
 		goto*game2
 	}
 	
-	if games=3 and 400<= mousey & 420 >= mousey{
+	if games=3 and 400<= mousey & 420 >= mousey and status="question"{
 		if gametype="select3"{
 			if 262<= mousex & 412 >= mousex{
 				if select(no.0)=correct : goto*game3_correct :else: goto*game3_mistake
@@ -783,7 +844,426 @@
 	gosub*idou
 	return
 	
+*game1_random	;問題の順番をランダムに振り分け
+	if level=1 : total_quizzes=5
+	if level=2 : total_quizzes=10
+	if level=3 or 4 : total_quizzes=20
+	
+	randomize
+	repeat total_quizzes
+		random_city_id.cnt=rnd(40)				;ランダムに出題する都市を決める
+		correct_answer_button.cnt=rnd(3)		;正解のボタンの位置
+	wait 1
+	loop
+	
+	number=0
+	
 *game1
+	if level=1 and number>4:goto*game1_result
+	if level=2 and number>9:goto*game1_result
+	if level=3 and number>19:goto*game1_result
+	if level=4 and number>19:goto*game1_result
+	
+	onkey 0
+	onclick gosub*click_game
+	
+	status="question"
+	
+	color 230,230,230:boxf
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
+	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
+	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
+	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
+	
+	games=1
+	
+	//出題する都市名と時差を取得する
+	random_city_id_2 = random_city_id.number	;random_city_id.numberをif文内で使うとバグるのでrandom_city_id_2に置き換えます
+	from_game1 = 1 : gosub*click
+	
+	//現地時刻を取得
+	if summertime_start!0{	;サマータイムがある場合
+		
+		if summertime_start <= gettime(1) & summertime_end >=gettime(1){	;北半球の夏時間
+			summertime=1
+		}else{
+			summertime=0
+		}
+		
+		if summertime_start>summertime_end and summertime_start <= gettime(1) & 12 >=gettime(1) or summertime_start>summertime_end and 1 <= gettime(1) & summertime_end >=gettime(1){	;南半球の夏時間
+			summertime=1
+		}
+			
+	}else{
+		summertime=0
+	}
+		
+	hour=timedif+gettime(4)+summertime	;表示する現地時間
+	if hour<0 {	;表示する時間がマイナスになった場合
+		hour=hour+24
+	}
+	if hour>23{	;表示する時間が24時以上になった場合
+		hour=hour-24
+	}
+	
+	minute=gettime(5)
+	if timedif=-3.5{	;UTC5:30（インド時間）の場合
+		minute=gettime(5)-30
+		if minute>0:hour=gettime(4)-3
+		if minute<0:hour=gettime(4)-4
+	
+		if minute<0:minute=minute+60
+		if minute>59:minute=minute-60
+	}
+	minute=strf("%02d",minute)
+	
+	correct=hour	;注：出題するのは○時(hour)のみ、○分(minute)は全選択肢で同じにします
+	
+	//各選択肢に表示する時刻を決める
+	select_g1.(correct_answer_button.number)=correct
+	
+	if correct_answer_button.number=0{
+		randomize
+		repeat
+		select_g1.1=rnd(24)
+		select_g1.2=rnd(24)
+		if select_g1.0 ! select_g1.1 ! select_g1.2 : break
+		wait 1
+		loop
+	}
+	if correct_answer_button.number=1{
+		randomize
+		repeat
+		select_g1.0=rnd(24)
+		select_g1.2=rnd(24)
+		if select_g1.0 ! select_g1.1 ! select_g1.2 : break
+		wait 1
+		loop
+	}
+	if correct_answer_button.number=2{
+		randomize
+		repeat
+		select_g1.0=rnd(24)
+		select_g1.1=rnd(24)
+		if select_g1.0 ! select_g1.1 ! select_g1.2 : break
+		wait 1
+		loop
+	}
+	
+	//ヒント（レベル4の場合はヒント無し）
+	if level=1 : hinto="ヒント：日本と"+city_jp+"の時差は"+(timedif+summertime)+"時間です。"
+	if level=1 and (timedif+summertime)>0 : hinto="ヒント：日本と"+city_jp+"の時差は+"+(timedif+summertime)+"時間です。"
+	
+	if level=2 or level=3 : hinto="ヒント："+city_jp+"はUTC"+(9 + timedif +summertime)+"です。"
+	if (level=2 or level=3) and (9 + timedif +summertime)>=0 : hinto="ヒント："+city_jp+"はUTC+"+(9 + timedif +summertime)+"です。"
+	
+	if level=4 : hinto=""
+	
+	//都市がデリーだった場合、ヒントの内容を少し変える
+	if level=1 and city_jp="デリー" : hinto="ヒント：日本と"+city_jp+"の時差は-3時間30分です。"
+	if level=2 or level=3 and city_jp="デリー" : hinto="ヒント："+city_jp+"はUTC5:30です。"
+	
+	//問題の表示
+	x=1024
+	gsk_x=465
+	
+	y=640
+	gsk_y=123
+	
+	repeat
+		redraw 0
+		
+		color 230,230,230:boxf 0,25,1024,640
+		
+		x=x-gsk_x
+		gsk_x=gsk_x/2
+		
+		font "Noto Sans CJK SC Light",30
+		color 0,142,148 : cmes ""+city_jp+"の現地時刻は何時何分でしょう？" ,x,200,x+824,500
+		font "Noto Sans CJK SC Light",14
+		color 0,142,148 : cmes ""+hinto+"" ,x,250,x+824,500
+	
+		y=y-gsk_y
+		gsk_y=gsk_y/2
+		font "Noto Sans CJK SC Light",14
+		pos 262,y:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.0+":"+minute+"",262,y-2,412,y+20
+		pos 422,y:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.1+":"+minute+"",422,y-2,572,y+20
+		pos 582,y:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.2+":"+minute+"",582,y-2,732,y+20
+	
+		if gsk_x=0:break
+		
+		redraw 1
+		wait 4
+	loop
+	
+	redraw 0
+	
+	color 230,230,230:boxf 0,25,1024,640
+	
+	font "Noto Sans CJK SC Light",30
+	color 0,142,148 : cmes ""+city_jp+"の現地時刻は何時何分でしょう？" ,0,200,1024,500
+	font "Noto Sans CJK SC Light",14
+	color 0,142,148 : cmes ""+hinto+"" ,0,250,1024,500
+	
+	font "Noto Sans CJK SC Light",14
+	pos 262,400:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.0+":"+minute+"",262,400-2,412,420
+	pos 422,400:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.1+":"+minute+"",422,400-2,572,420
+	pos 582,400:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.2+":"+minute+"",582,400-2,732,420
+		
+	redraw 1
+	
+	stop
+*game1_correct
+	status="correct"
+	correct_total=correct_total+1
+	number=number+1
+	goto*game1_check
+*game1_mistake
+	status="mistake"
+	number=number+1
+	goto*game1_check
+*game1_check
+	clrobj
+	
+	gsk_x=465
+	gsk_y=123
+	
+	x2=1024
+	gsk_x2=295
+	
+	y2=640
+	gsk_y2=170
+	
+	repeat
+		redraw 0
+		
+		color 230,230,230:boxf 0,25,1024,640
+		
+		x=x-gsk_x
+		gsk_x=gsk_x/2
+		
+		font "Noto Sans CJK SC Light",30
+		color 0,142,148 : cmes ""+city_jp+"の現地時刻は何時何分でしょう？" ,x,200,x+824,500
+		font "Noto Sans CJK SC Light",14
+		color 0,142,148 : cmes ""+hinto+"" ,x,250,x+824,500
+	
+		y=y+gsk_y
+		gsk_y=gsk_y/2
+	
+		font "Noto Sans CJK SC Light",14
+		pos 262,y:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.0+":"+minute+"",262,y-2,412,y+20
+		pos 422,y:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.1+":"+minute+"",422,y-2,572,y+20
+		pos 582,y:gcopy 9,0,0,150,20 : color 255,255,255:cmes""+select_g1.2+":"+minute+"",582,y-2,732,y+20
+	
+		x2=x2-gsk_x2
+		gsk_x2=gsk_x2/2
+	
+		if status="correct" : pos x2,150:gmode 2:gcopy 10,0,0,150,150
+		if status="mistake" : pos x2,150:gmode 2:gcopy 11,0,0,150,150
+	
+		y2=y2-gsk_y2
+		gsk_y2=gsk_y2/2
+	
+		color 0,142,148
+	
+		font "Noto Sans CJK SC Light",24
+		if status="correct" : cmes "正解!",0,y2+10,1024,640
+		if status="mistake" : cmes "不正解!",0,y2+10,1024,640
+		
+		font "Noto Sans CJK SC Light",16
+		cmes ""+city_jp+"の現地時刻は"+correct+":"+minute+"でした！",0,y2+60,1024,640
+	
+		font "Noto Sans CJK SC Light",14
+		pos 407,y2+135:gcopy 9,0,0,100,20 : color 255,255,255:cmes"次へ",407,y2+135-2,507,y+155
+		pos 517,y2+135:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Wikipedia",517,y2+135-2,617,y+155
+	
+		if gsk_x2=0:break
+		
+		redraw 1
+		wait 4
+	loop
+	
+	redraw 0
+	
+	color 230,230,230:boxf 0,25,1024,640
+	if status="correct" : pos 437,150:gmode 2:gcopy 10,0,0,150,150
+	if status="mistake" : pos 437,150:gmode 2:gcopy 11,0,0,150,150
+	
+	color 0,142,148
+	font "Noto Sans CJK SC Light",24
+	if status="correct" : cmes "正解!",0,310,1024,400
+	if status="mistake" : cmes "不正解!",0,310,1024,400
+	
+	font "Noto Sans CJK SC Light",16
+	cmes ""+city_jp+"の現地時刻は"+correct+":"+minute+"でした！",0,360,1024,640
+	
+	font "Noto Sans CJK SC Light",14
+	pos 407,435:gcopy 9,0,0,100,20 : color 255,255,255:cmes"次へ",407,435-2,507,455
+	pos 517,435:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Wikipedia",517,435-2,617,455
+	
+	redraw 1
+	
+	stop
+*game1_result
+	x=1024
+	gsk_x=465
+	
+	status="result"
+	
+	repeat
+		redraw 0
+		
+		color 230,230,230:boxf 0,25,1024,640
+		
+		x=x-gsk_x
+		gsk_x=gsk_x/2
+		
+		font "Noto Sans CJK SC Light",30
+		color 0,142,148 : cmes "結果発表" ,x,200,x+824,500
+	
+		if gsk_x=0:break
+	
+		redraw 1
+		wait 4
+	loop
+	
+	wait 1
+	
+	y=640
+	gsk_y=170
+	
+	repeat
+		redraw 0
+	
+		color 230,230,230:boxf 0,300,1024,640
+		y=y-gsk_y
+		gsk_y=gsk_y/2
+	
+		if level=1{
+			if correct_total=0 : class="ちり紙級\n\n時差の計算ができるようになりましょう。"
+			if 1<= correct_total & 2 >= correct_total : class="小学生級\n\nまだまだです。"
+			if 3<= correct_total & 4 >= correct_total : class="中学生級\n\n惜しいです。もう一息！"
+			if correct_total=5 : class="高校生級\n\nパーフェクトです。上位のレベルにも挑戦してみましょう。"
+		}
+		if level=2{
+			if correct_total=0 : class="ミミズ級\n\nUTCの数値を日本時間から足し引きすれば求められますよ。"
+			if 1<= correct_total & 3 >= correct_total : class="モグラ級\n\n時差の計算に慣れましょう！"
+			if 4<= correct_total & 7 >= correct_total : class="ヘビ級\n\nこの調子で頑張りましょう。"
+			if 8<= correct_total & 9 >= correct_total : class="キツネ級\n\nなかなかよい出来です。\nパーフェクトを目指して頑張りましょう。"
+			if correct_total=10 : class="鷲級\n\nパーフェクトです。上位のレベルにも挑戦してみましょう。"
+		}
+	
+		if level=3{
+			if correct_total=0 : class="平社員級\nもっと上を目指してみましょう。"
+			if 1<= correct_total & 5 >= correct_total : class="係長級\n\n落ち着いて計算しましょう。"
+			if 6<= correct_total & 15 >= correct_total : class="課長級\n\n何度も繰り返してパーフェクトを目指しましょう。"
+			if 16<= correct_total & 19 >= correct_total : class="部長級\n\nもう少し頑張れば社長になれますよ。"
+			if correct_total=20 : class="社長級\n\nパーフェクトです。威張っても大丈夫でしょう。"
+		}
+	
+		if level=4{
+			if correct_total=0 : class="赤ちゃん級\n\n時差の計算ができるようになりましょう。"
+			if 1<= correct_total & 5 >= correct_total : class="高校生級\n\n少しづつ時差の計算に慣れてみましょう。。"
+			if 6<= correct_total & 15 >= correct_total : class="そこそこの大学生級\n\nこの調子で頑張りましょう。"
+			if 16<= correct_total & 19 >= correct_total : class="エリートを目指す社会人級\n\nなかなかよい出来です。\nパーフェクトを目指して頑張りましょう。"
+			if correct_total=20 : class="エリート級\n\nパーフェクトです。あなたは世界を知り尽くした人です。"
+		}
+	
+		font "Noto Sans CJK SC Light",26
+		if level=1 : color 0,142,148 : cmes "正答数"+correct_total+"問 /5問\n" ,200,y,824,640
+		if level=2 : color 0,142,148 : cmes "正答数"+correct_total+"問 /10問\n" ,200,y,824,640
+		if level=3 or level=4 : color 0,142,148 : cmes "正答数"+correct_total+"問 /20問\n" ,200,y,824,640
+	
+		font "Noto Sans CJK SC Light",18
+		color 0,142,148 : cmes class ,200,y+40,824,640
+	
+		font "Noto Sans CJK SC Light",14
+		pos 462,y+165:gcopy 9,0,0,100,20 : color 255,255,255:cmes"次へ",462,y+165-2,562,y+185
+	
+		if gsk_y=0:break
+		
+		redraw 1
+		wait 4
+	loop
+	
+	stop
+*game1_result2
+	notesel data
+	noteload "data/record.dat"
+	noteget point,1
+	
+	if level=4 : correct_total=int(correct_total)*2	;レベル4ではポイント2倍
+	point=int(point)+int(correct_total)
+	noteadd str(point),1,1
+	notesave "data/record.dat"
+	
+	place_pos0=int(point)/30
+	
+	place_pos_minus=int(point)/1230*41
+	place_pos0=place_pos0-place_pos_minus 			;一周した場合はスタート地点にもどる
+	
+	notesel travel
+	noteload"data/travel.dat"
+	noteget place,place_pos0
+	
+	split place,"(",place,place_pos
+	
+	place_pos=strmid (place_pos,0,instr(place_pos,0,")"))
+	split place_pos,",",place_pos_x,place_pos_y
+	place_pos_x=int(place_pos_x)
+	place_pos_y=int(place_pos_y)
+	
+	x=1024
+	gsk_x=465
+	
+	status="result2"
+	from_game1 = 0
+	
+	repeat
+		redraw 0
+		
+		color 230,230,230:boxf 0,25,1024,640
+		
+		x=x-gsk_x
+		gsk_x=gsk_x/2
+		
+		font "Noto Sans CJK SC Light",30
+		color 0,142,148 : cmes "現在のポイント "+point+" pt" ,x,100,x+824,500
+	
+		if gsk_x=0:break
+	
+		redraw 1
+		wait 4
+	loop
+	
+	wait 1
+	
+	y=640
+	gsk_y=240
+	
+	repeat
+		redraw 0
+	
+		color 230,230,230:boxf 0,140,1024,640
+		y=y-gsk_y
+		gsk_y=gsk_y/2
+	
+		font "Noto Sans CJK SC Light",26
+		color 0,142,148 : cmes "現在地　"+place+"" ,200,y,824,640
+	
+		pos 92,y+35:gmode 0:gcopy 12,0,0,840,400
+	
+		color 255,127,39 : circle place_pos_x-3+92 , place_pos_y-3+y+35 , place_pos_x+3+92 , place_pos_y+3+y+35
+	
+		if gsk_y=0:break
+		
+		redraw 1
+		wait 4
+	loop
+	
+	pos 462,580:objimage 9:objsize 100,20:button"OK",*game
+	
+	stop
 	
 *game2_random	;問題の順番をランダムに振り分け
 	notesel quiz0
@@ -814,7 +1294,7 @@
 	status="question"
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.0"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
@@ -1078,7 +1558,7 @@
 	
 		if level=1{
 			if correct_total=0 : class="赤ちゃん級\n\n完全に勉強不足です。"
-			if 1<= correct_total & 2 >= correct_total : class="小学生級\n\nもまだまだです。"
+			if 1<= correct_total & 2 >= correct_total : class="小学生級\n\nまだまだです。"
 			if 3<= correct_total & 4 >= correct_total : class="高校生級\n\n惜しいです。もう一息！"
 			if correct_total=5 : class="社会人級\n\nパーフェクトです。上位のレベルにも挑戦してみましょう。"
 		}
@@ -1250,7 +1730,7 @@
 	status="question"
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.0"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
@@ -1510,7 +1990,7 @@
 	
 		if level=1{
 			if correct_total=0 : class="赤ちゃん級\n\n完全に勉強不足です。"
-			if 1<= correct_total & 2 >= correct_total : class="小学生級\n\nもまだまだです。"
+			if 1<= correct_total & 2 >= correct_total : class="小学生級\n\nまだまだです。"
 			if 3<= correct_total & 4 >= correct_total : class="高校生級\n\n惜しいです。もう一息！"
 			if correct_total=5 : class="社会人級\n\nパーフェクトです。上位のレベルにも挑戦してみましょう。"
 		}
@@ -1656,7 +2136,7 @@
 	clrobj
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.0"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
@@ -1673,7 +2153,11 @@
 	font "Noto Sans CJK SC Light",36 : color 0,0,0
 	cmes name,0,130,1024,180
 	font "Noto Sans CJK SC Light",16 : color 0,0,0
-	cmes "バージョン："+version+"\nBuild "+build+"\n\n更新日時 "+date+"",0,250,1024,350
+	cmes "Version "+version+"\nBuild "+build+"\n\nLast updated "+date+"",0,250,1024,350
 	
 	redraw 1
 	stop
+	
+*ontimer
+	if now="clock" : sub=1 : gosub*display2
+	return
