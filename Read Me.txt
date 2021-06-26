@@ -1,4 +1,4 @@
-World Timepiece 3.3
+World Timepiece 3.3.2
 
 1.はじめに
 　この度は、World Timepieceをダウンロードしていただきありがとうございます。
@@ -85,4 +85,4 @@ World Timepiece 3.3
 　※管理人の都合により返信が遅れる場合があります。
 　　また、サーバーに接続できないことがあります。ご了承ください。
 
-2016年10月30日 YotioSoft
+2016年10月31日 YotioSoft

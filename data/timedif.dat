@@ -339,7 +339,7 @@ summer_start_week_number : 3
 summer_start_week : 0
 summer_start_time : 0
 summer_finish_month : 2
-summer_finish_week_number : 2
+summer_finish_week_number : 3
 summer_finish_week : 6
 summer_finish_time : 23
 hemisphere : S
