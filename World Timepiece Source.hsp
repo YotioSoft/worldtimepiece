@@ -4,7 +4,7 @@
 	top=0
 
 	dim RECT, 4
-	title"World Timepiece 3.1"
+	title"World Timepiece"
 	
 //バッファ
 	buffer 1
@@ -56,9 +56,8 @@
 	onexit *exit
 	
 //ウィンドウタイマー
-	sub=1
 	oncmd  gosub *ontimer, WM_TIMER
-	SetTimerA hwnd, ID_TIMER, 100, 0			;数値を下げれば下げるほど動作が早くなるが、バグが起こりやすくなる
+	SetTimerA hwnd, ID_TIMER, 50, 0			;数値を下げれば下げるほど動作が早くなるが、バグが起こりやすくなる
 
 #module
 	
@@ -131,16 +130,21 @@
 	cityname.34="Los Angeles, the USA"
 	cityname.35="Vancouver, Canada
 	cityname.36="Anchorage, the USA"
-	cityname.37="Honolulu, Mexico"
+	cityname.37="Honolulu, the USA"
 	cityname.38="Auckland, New Zealand"
 	cityname.39="Sydney, Australia"
 	
 	goto*tokyo
 	
 *exit
+	oncmd 0
 	end
 	
 *click
+	oncmd 0
+	
+	on_click = 0
+	
 	if ( from_game1=0 and 790<= mousex & 990 >= mousex and 30<= mousey & 610 >= mousey ) or from_game1=1{
 		if ( from_game1=0 and 40+24*(0+top)<= mousey & 40+24*(1+top) >= mousey ) or ( from_game1=1 and random_city_id_2=0) {
 			goto*tokyo
@@ -275,8 +279,10 @@
 		end
 	}
 	
+	oncmd 1
+	
 *idou
-	if wparam == 1 {
+	if wparam == 1 and 0<= mousey & 40 >= mousey{		;タイトルバー部分が押されていた場合、ウィンドウを動かす
 		sendmsg hwnd,WM_NCLBUTTONDOWN,HTCAPTION,0
 	}
 	
@@ -489,15 +495,14 @@
 *display
 	if from_game1=1 : return : else : from_game1=0		;*game1から来た場合、戻る
 	
-	oncmd 1
-	
 	clrobj
-	redraw 0
 	
 	now="clock"
 	
 	onclick gosub *click
 	onkey 0
+	
+	redraw 0
 	
 	//都市の概要を読み込み
 		notesel about_city
@@ -525,22 +530,22 @@
 		}
 	
 	//メニュー
-		oncmd 0
 	
 		color 195,195,195:line 760,30,760,610
 		
-		font "Noto Sans CJK SC Light",16
-		
-		redraw 0
 		repeat 40
-		onerror *display
-		color 255,255,255:pos 790,40+24*(cnt+top):mes cityname.cnt
-		await 0.001
+	
+			font "Noto Sans CJK SC Light",16
+			color 255,255,255
+			pos 790,40+24*(cnt+top)
+			mes cityname.cnt
+	
+			await 0.1
+		
 		loop
 	
 		color 0,100,255 : boxf 785,40+24*(city_id+top), 990,40+24*(city_id+top+1)
 		color 255,255,255 : pos 790,40+24*(city_id+top) : mes cityname.city_id
-		redraw 1
 	
 		pos 760,0:gmode 0:gcopy 4,760,0,235,42
 		pos 765,620:gmode 0:gcopy 4,765,620,235,42
@@ -548,17 +553,18 @@
 		boxfa 760,0,995,42
 		boxfa 765,620,765+235,620+42
 	
-		oncmd 1
-	
 	//タイトルとボタン
-		font "Noto Sans CJK SC Light",14 : color 255,255,255 : pos 10,3:mes"World Timepiece 3.1"
+		font "Noto Sans CJK SC Light",14 : color 255,255,255 : pos 10,3:mes"World Timepiece"
 		pos 940,5:gmode 2:gcopy 5,0,0,20,20		;ゲームボタン
 		pos 970,5:gmode 2:gcopy 13,0,0,20,20	;情報
 		pos 1000,5:gmode 2:gcopy 1,0,0,20,20	;閉じるボタン
 	
+	redraw 1
+	
 *display2
-	if sub=0 : repeat
-		redraw 0
+	oncmd 0
+	
+	redraw 0
 	
 		//マウスホイールが動いたとき
 			mousew_buf=mousew
@@ -576,40 +582,49 @@
 		pos 0,25:gmode 0:gcopy 4,0,25,750,640
 		color 0,0,0:gmode 4,,,60
 		boxfa 0,25,750,640
+	
+		if gettime(6) = 0 or on_click = 0 {
 		
-		if summertime_start!0{	;サマータイムがある場合
-		
-			if summertime_start <= gettime(1) & summertime_end >=gettime(1){	;北半球の夏時間
-				summertime=1
+			if summertime_start!0{	;サマータイムがある場合
+			
+				if summertime_start <= gettime(1) & summertime_end >=gettime(1){	;北半球の夏時間
+					summertime=1
+				}else{
+					summertime=0
+				}
+				
+				if summertime_start>summertime_end and summertime_start <= gettime(1) & 12 >=gettime(1) or summertime_start>summertime_end and 1 <= gettime(1) & summertime_end >=gettime(1){	;南半球の夏時間
+					summertime=1
+				}
+				
 			}else{
 				summertime=0
 			}
+		
+			hour = timedif + gettime(4) + summertime		;表示する現地時間
 			
-			if summertime_start>summertime_end and summertime_start <= gettime(1) & 12 >=gettime(1) or summertime_start>summertime_end and 1 <= gettime(1) & summertime_end >=gettime(1){	;南半球の夏時間
-				summertime=1
+			minute=gettime(5)
+			if timedif = -3.5{	;UTC5:30（インド時間）の場合
+				minute= gettime(5) - 30
+				if minute >= 0 : hour = gettime(4) - 3
+				if minute <  0 : hour = gettime(4) - 4
+			
+				if minute < 0  : minute = minute + 60
+				if minute > 59 : minute = minute - 60
 			}
-			
-		}else{
-			summertime=0
-		}
 		
-		hour=timedif+gettime(4)+summertime	;表示する現地時間
-		if hour<0 {	;表示する時間がマイナスになった場合
-			hour=hour+24
+			if hour<0 {	;表示する時間がマイナスになった場合
+				hour=hour+24
+			}
+			if hour>23{	;表示する時間が24時以上になった場合
+				hour=hour-24
+			}
+	
+			on_click = 1
+	
 		}
-		if hour>23{	;表示する時間が24時以上になった場合
-			hour=hour-24
-		}
-		
-		minute=gettime(5)
-		if timedif=-3.5{	;UTC5:30（インド時間）の場合
-			minute=gettime(5)-30
-			if minute>0:hour=gettime(4)-3
-			if minute<0:hour=gettime(4)-4
-		
-			if minute<0:minute=minute+60
-			if minute>59:minute=minute-60
-		}
+	
+		//メモ：インド時間でずれる場合あり（例：日本時間が0時29分→0時30分のとき、インド時間が20時59分→20時00分になる）
 		
 		s=strf("%02d",hour)+":"
 		s+=strf("%02d",minute)
@@ -624,12 +639,13 @@
 		font "Noto Sans CJK SC Light",14
 		pos 110,235:mes about_the_city
 		
-		redraw 1
-		redraw 1
-		wait 1
-	if sub=0 : loop
+	redraw 1
+	
+	oncmd 1
 	
 	if sub=1 : sub=0 : return
+	
+	stop
 	
 *buffer_about_city
 	//表示していた都市の情報を一時保存
@@ -650,12 +666,10 @@
 	clrobj
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
-	
-	onerror 0
 	
 	pos 257,150:gcopy 6,0,0,150,150
 	pos 437,150:gcopy 7,0,0,150,150
@@ -673,7 +687,7 @@
 		font "Noto Sans CJK SC Light",36:color 0,142,148
 		cmes"Time Quiz",300,330,724,550
 		font "Noto Sans CJK SC Light",18
-		cmes"現地時間を当てるゲームです。\nLevel1からLevel3まではヒントが表示されますが、\nLevel4ではノーヒントです。",250,400,774,550
+		cmes"現地時間を当てるゲームです。\nLevel1からLevel3まではヒントが表示されますが、\nLevel4ではノーヒントです。\n※同じ選択肢や同じ問題が二度出てくることがあります。",250,400,774,550
 	
 		font "Noto Sans CJK SC Light",14
 		pos 300,550:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Level1",300,548,400,570
@@ -687,7 +701,7 @@
 		font "Noto Sans CJK SC Light",36:color 0,142,148
 		cmes"City Name Quiz",300,330,724,550
 		font "Noto Sans CJK SC Light",18
-		cmes"国の名前から首都の名前を当てるゲームです。\nレベルが上がるごとにマイナーな都市も含めて出題されます。",250,400,774,550
+		cmes"国の名前から首都の名前を当てるゲームです。\nレベルが上がるごとにマイナーな都市も含めて出題されます。\nLevel4ではポイントが2倍になります。",250,400,774,550
 	
 		font "Noto Sans CJK SC Light",14
 		pos 300,550:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Level1",300,548,400,570
@@ -748,6 +762,7 @@
 		end
 	}
 	
+//答え合わせ
 	if games=1 and 400<= mousey & 420 >= mousey and status="question"{
 		if 262<= mousex & 412 >= mousex{
 			if select_g1.0=correct : goto*game1_correct :else: goto*game1_mistake
@@ -780,9 +795,18 @@
 			}
 		}
 	}
-	if games=2 and gametype="input"{
+	if games=2 and gametype="input" and status="question"{
 		if 572<= mousex & 612 >= mousex and 400<= mousey & 440 >= mousey{
-			if input_city=correct : goto*game2_correct :else: goto*game2_mistake
+	
+			repeat 10
+				notesel quiz0
+				noteget correct, cnt
+				if input_city=correct and input_city ! "" : goto*game2_correct
+		
+				await 1
+			loop
+		
+			goto*game2_mistake
 		}
 	}
 	
@@ -818,12 +842,18 @@
 		goto*game3
 	}
 	
+//Wikipedia
+
+	if games=1 and 517<= mousex & 617 >= mousex and 430<= mousey & 450 >= mousey{
+		exec "https://ja.wikipedia.org/wiki/"+city_jp+"",16
+		stop
+	}
 	if status="correct" and games=2 and 517<= mousex & 617 >= mousex and 430<= mousey & 450 >= mousey{
 		exec "https://ja.wikipedia.org/wiki/"+correct+"",16
 		stop
 	}
 	if status="correct" and games=3 and 517<= mousex & 617 >= mousex and 430<= mousey & 450 >= mousey{
-		split quiz,"は",the_city_name
+		split quiz,"は",the_city_name	;都市名抜き出し（不正解だった時のみ）
 		exec "https://ja.wikipedia.org/wiki/"+the_city_name+"",16
 		stop
 	}
@@ -832,7 +862,7 @@
 		stop
 	}
 	if status="mistake" and games=3 and 517<= mousex & 617 >= mousex and 430<= mousey & 450 >= mousey{
-		split quiz,"は",the_city_name
+		split quiz,"は",the_city_name	;都市名抜き出し（不正解だった時のみ）
 		exec "https://ja.wikipedia.org/wiki/"+the_city_name+"",16
 		stop
 	}
@@ -870,7 +900,7 @@
 	status="question"
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
@@ -899,22 +929,24 @@
 	}
 		
 	hour=timedif+gettime(4)+summertime	;表示する現地時間
+		
+	minute=gettime(5)
+	if timedif=-3.5{	;UTC5:30（インド時間）の場合
+		minute=gettime(5)-30
+		if minute>0:hour=gettime(4)-3
+		if minute<0:hour=gettime(4)-4
+		
+		if minute<0:minute=minute+60
+		if minute>59:minute=minute-60
+	}
+	
 	if hour<0 {	;表示する時間がマイナスになった場合
 		hour=hour+24
 	}
 	if hour>23{	;表示する時間が24時以上になった場合
 		hour=hour-24
 	}
-	
-	minute=gettime(5)
-	if timedif=-3.5{	;UTC5:30（インド時間）の場合
-		minute=gettime(5)-30
-		if minute>0:hour=gettime(4)-3
-		if minute<0:hour=gettime(4)-4
-	
-		if minute<0:minute=minute+60
-		if minute>59:minute=minute-60
-	}
+		
 	minute=strf("%02d",minute)
 	
 	correct=hour	;注：出題するのは○時(hour)のみ、○分(minute)は全選択肢で同じにします
@@ -1294,13 +1326,19 @@
 	status="question"
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
 	
-	notesel question
-	noteload"data/game2.quiz"
+	if level ! 4 {
+		notesel question
+		noteload"data/game2.quiz"
+	}
+	if level = 4 {
+		notesel question
+		noteload"data/game2-4.quiz"
+	}
 	
 	games=2
 	if level=1 | level=2 | level=3 : gametype="select3"
@@ -1311,8 +1349,8 @@
 	if level=2 and quiz_no.number>10  :  question_start = instr (question,0,"1"+quiz_no.number+"{") + strlen("1"+quiz_no.number+"") +2
 	if level=3 and quiz_no.number<10  :  question_start = instr (question,0,"20"+quiz_no.number+"{") + strlen("20"+quiz_no.number+"") +2
 	if level=3 and quiz_no.number>10  :  question_start = instr (question,0,"2"+quiz_no.number+"{") + strlen("2"+quiz_no.number+"") +2
-	if level=4 and quiz_no.number<10  :  question_start = instr (question,0,"20"+quiz_no.number+"{") + strlen("20"+quiz_no.number+"") +2
-	if level=4 and quiz_no.number>10  :  question_start = instr (question,0,"2"+quiz_no.number+"{") + strlen("2"+quiz_no.number+"") +2
+	if level=4						  :  question_start = instr (question,0,""+quiz_no.number+"{") + strlen(""+quiz_no.number+"") +2
+	
 	question_end = instr (question,question_start,"}")
 	quiz0 = strmid (question,question_start,question_end)
 	
@@ -1328,6 +1366,11 @@
 		noteget mistake(5),7
 	}
 	noteget explanation,8
+	
+	if level = 4 {
+		notesel quiz0
+		noteget explanation, notemax - 1
+	}
 	
 	strrep 	explanation,"\\n","\n"	;改行
 	
@@ -1358,6 +1401,8 @@
 	
 	y=640
 	gsk_y=123
+	
+	repeat_finish = 0		;repeat内の処理がまだ終わっていないことを示す
 	
 	repeat
 		redraw 0
@@ -1394,6 +1439,8 @@
 		redraw 1
 		wait 4
 	loop
+	
+	repeat_finish = 1		;repeat内の処理が終わったことを示す
 	
 	redraw 0
 	
@@ -1441,6 +1488,8 @@
 	
 	y2=640
 	gsk_y2=170
+	
+	repeat_finish = 0		;repeat内の処理がまだ終わっていないことを示す
 	
 	repeat
 		redraw 0
@@ -1494,11 +1543,13 @@
 		pos 407,y2+135:gcopy 9,0,0,100,20 : color 255,255,255:cmes"次へ",407,y2+135-2,507,y+155
 		pos 517,y2+135:gcopy 9,0,0,100,20 : color 255,255,255:cmes"Wikipedia",517,y2+135-2,617,y+155
 	
-		if gsk_x2=0:break
+		if gsk_x2=0 : break
 		
 		redraw 1
-		wait 4
+		wait 2
 	loop
+	
+	repeat_finish = 1		;repeat内の処理が終わったことを示す
 	
 	redraw 0
 	
@@ -1527,6 +1578,10 @@
 	
 	status="result"
 	
+	objmode 1
+	
+	repeat_finish = 0		;repeat内の処理がまだ終わっていないことを示す
+	
 	repeat
 		redraw 0
 		
@@ -1543,6 +1598,8 @@
 		redraw 1
 		wait 4
 	loop
+	
+	repeat_finish = 1		;repeat内の処理が終わったことを示す
 	
 	wait 1
 	
@@ -1635,6 +1692,8 @@
 	
 	status="result2"
 	
+	repeat_finish = 0		;repeat内の処理がまだ終わっていないことを示す
+	
 	repeat
 		redraw 0
 		
@@ -1652,10 +1711,14 @@
 		wait 4
 	loop
 	
+	repeat_finish = 1		;repeat内の処理が終わったことを示す
+	
 	wait 1
 	
 	y=640
 	gsk_y=240
+	
+	repeat_finish = 0		;repeat内の処理がまだ終わっていないことを示す
 	
 	repeat
 		redraw 0
@@ -1677,25 +1740,51 @@
 		wait 4
 	loop
 	
+	repeat_finish = 1		;repeat内の処理が終わったことを示す
+	
 	pos 462,580:objimage 9:objsize 100,20:button"OK",*game
 	
 	stop
 *game2_key
 	if level=4 and status="question" and wparam=13{	;Enterキーが押されたとき
-		if input_city=correct : goto*game2_correct
-		if input_city!correct : goto*game2_mistake
+	
+		notesel quiz0
+	
+		repeat_finish = 0		;repeat内の処理がまだ終わっていないことを示す
+		
+		repeat notemax
+			notesel quiz0
+			noteget correct, cnt
+			if input_city=correct and input_city ! "" : status = "correct" : break
+	
+			await 1
+		loop
+	
+		repeat_finish = 1		;repeat内の処理が終わったことを示す
+	
+		if status = "correct" {
+			goto*game2_correct
+		}else{
+			goto*game2_mistake
+		}
+	
 	}
-	if status="correct" and  wparam=13{
-		goto*game2
-	}
-	if status="mistake" and  wparam=13{
-		goto*game2
-	}
-	if status="result" and  wparam=13{
-		goto*game2_result2
-	}
-	if status="result2" and  wparam=13{
-		goto*game
+	
+	if repeat_finish = 1 {
+	
+		if status="correct" and  wparam=13{
+			gosub*game2
+		}
+		if status="mistake" and  wparam=13{
+			goto*game2
+		}
+		if status="result" and  wparam=13{
+			goto*game2_result2
+		}
+		if status="result2" and  wparam=13{
+			goto*game
+		}
+	
 	}
 	return
 	
@@ -1730,7 +1819,7 @@
 	status="question"
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
@@ -2136,7 +2225,7 @@
 	clrobj
 	
 	color 230,230,230:boxf
-	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece 3.1"
+	font "Noto Sans CJK SC Light",14 : color : pos 10,3:mes"World Timepiece"
 	pos 940,5:gmode 0:gcopy 5,0,20,20,20	;ゲームボタン
 	pos 970,5:gmode 0:gcopy 13,0,20,20,20	;情報
 	pos 1000,5:gmode 0:gcopy 1,0,20,20,20	;閉じるボタン
