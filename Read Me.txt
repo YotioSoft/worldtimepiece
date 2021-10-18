@@ -1,4 +1,4 @@
-World Timepiece 3.3
+World Timepiece 3.3.2
 
 1.はじめに
 　この度は、World Timepieceをダウンロードしていただきありがとうございます。

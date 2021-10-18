@@ -599,7 +599,7 @@
 		if minute > 59 {
 			minute = 0
 		}
-	
+		
 		;夏時間がある場合は夏時間を取得（毎時0分）
 		if summer_time_exist = 1 and minute = 0 and second = 0 and jti = 0 {
 			oncmd 0
@@ -2681,6 +2681,7 @@
 	
 	;今週の○曜日が今月の第何○曜日か取得
 	the_day = summer_start_week
+	
 	if first_week_days >= the_day + 1 {
 		number_of_start_the_day = number_of_week - 1
 	} else {
@@ -2777,7 +2778,7 @@
 					timedif++																	;夏時間を設定（+1時間）
 				}
 				if summer_start_week_number = number_of_start_the_day {							;もしも夏時間が始まる週が今週で
-					if summer_start_week > week {												;今日が夏時間が始まる曜日よりもあとならば
+					if summer_start_week < week {												;今日が夏時間が始まる曜日よりもあとならば
 						timedif++																;夏時間を設定（+1時間）
 					}
 					if summer_start_week = week {												;もしも夏時間が始まる日が今日で
@@ -2793,7 +2794,7 @@
 					timedif++																	;夏時間を設定（+1時間）
 				}
 				if summer_finish_week_number = number_of_finish_the_day {						;もしも夏時間が終わる週が今週で
-					if summer_finish_week < week {												;今日が夏時間が終わる曜日よりも前ならば
+					if summer_finish_week > week {												;今日が夏時間が終わる曜日よりも前ならば
 						timedif++																;夏時間を設定（+1時間）
 					}
 					if summer_finish_week = week {												;もしも夏時間が終わる日が今日で
@@ -2804,7 +2805,7 @@
 				}
 			}
 			
-		} else {
+		} else : if summer_start_month < month and month < summer_finish_month {
 			timedif++				;夏時間が始まる月・終わる月が今月ではないが夏時間期間中の場合は夏時間を設定（+1時間）
 		}
 	}
@@ -2819,7 +2820,7 @@
 					timedif++																	;夏時間を設定（+1時間）
 				}
 				if summer_start_week_number = number_of_start_the_day {							;もしも夏時間が始まる週が今週で
-					if summer_start_week > week {												;今日が夏時間が始まる曜日よりもあとならば
+					if summer_start_week < week {												;今日が夏時間が始まる曜日よりもあとならば
 						timedif++																;夏時間を設定（+1時間）
 					}
 					if summer_start_week = week {												;もしも夏時間が始まる日が今日で
@@ -2830,11 +2831,11 @@
 				}
 			}
 			if summer_finish_month = month {													;今月が夏時間が終わる月で
-				if summer_finish_week_number < number_of_finish_the_day {						;なおかつ夏時間が終わる週・曜日よりも前（当日は含めない）の日なら
+				if summer_finish_week_number > number_of_finish_the_day {						;なおかつ夏時間が終わる週・曜日よりも前（当日は含めない）の日なら
 					timedif++																	;夏時間を設定（+1時間）
 				}
 				if summer_finish_week_number = number_of_finish_the_day {						;もしも夏時間が終わる週が今週で
-					if summer_finish_week < week {												;今日が夏時間が終わる曜日よりもあとならば
+					if summer_finish_week > week {												;今日が夏時間が終わる曜日よりもあとならば
 						timedif++																;夏時間を設定（+1時間）
 					}
 					if summer_finish_week = week {												;もしも夏時間が終わる日が今日で
@@ -2845,7 +2846,7 @@
 				}
 			}
 			
-		} else {
+		} else : if ( summer_start_month < month and month > summer_finish_month ) or ( summer_start_month > month and month < summer_finish_month ) {
 			timedif++				;夏時間が始まる月・終わる月が今月ではないが夏時間期間中の場合は夏時間を設定（+1時間）
 		}
 		
